@@ -16,6 +16,8 @@ public struct RecordCoordinatorView: View {
     }
 
     public var body: some View {
+        // TODO: this could be probably in APP, navigation Destination would stay with some extra generc protocol
+        // coordinator would be passed through dependencies, thus needed in some reusable package imported everywhere
         NavigationStack(path: $coordinator.navigationPath) {
             EmptyView()
                 .navigationDestination(for: RecordFeature.Route.self) { route in
