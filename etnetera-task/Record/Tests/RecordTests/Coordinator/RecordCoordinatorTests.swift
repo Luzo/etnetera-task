@@ -10,7 +10,8 @@ import Testing
 @testable import Record
 
 struct RecordCoordinatorTests {
-    @Test func sut_should_set_initial_route_on_start() async throws {
+    @Test
+    func sut_should_set_initial_route_on_start() async throws {
         // TODO: find a way to test this properly - navigation path doesn't provide any way to get the components
         let sut = RecordCoordinatorSpy()
         sut.start()
@@ -18,7 +19,8 @@ struct RecordCoordinatorTests {
         #expect(sut.navigationPath.count == 1)
     }
 
-    @Test func sut_should_push_add_record() async throws {
+    @Test
+    func sut_should_push_add_record() async throws {
         let sut = RecordCoordinatorSpy()
         sut.startWithPath(path: [.recordsList])
         sut.navigate(to: .addRecord)
@@ -27,7 +29,8 @@ struct RecordCoordinatorTests {
         #expect(sut.spiablePath.last == .addRecord)
     }
 
-    @Test func sut_should_pop_last() async throws {
+    @Test
+    func sut_should_pop_last() async throws {
         let sut = RecordCoordinatorSpy()
         sut.startWithPath(path: [.recordsList, .addRecord])
         sut.pop()
