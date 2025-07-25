@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "9ED79AD4-BCC0-4638-AE84-409074C5C1E0",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:etnetera-task.xcodeproj",
+        "identifier" : "E8F860412E338CC600AB10DB",
+        "name" : "etnetera-taskTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:Record",
+        "identifier" : "RecordTests",
+        "name" : "RecordTests"
+      }
+    }
+  ],
+  "version" : 1
+}

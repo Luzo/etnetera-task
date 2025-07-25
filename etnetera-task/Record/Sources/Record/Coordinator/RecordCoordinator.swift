@@ -1,6 +1,6 @@
 //
-//  AppCoordinator.swift
-//  etnetera-task
+//  RecordCoordinator.swift
+//  Record
 //
 //  Created by Lubos Lehota on 25/07/2025.
 //
@@ -8,21 +8,23 @@
 import Observation
 import SwiftUI
 
-enum Route {
-    case recordsList
-    case addRecord
+enum RecordFeature {
+    enum Route {
+        case recordsList
+        case addRecord
+    }
 }
 
-protocol AppCoordinatorProtocol {
+protocol RecordCoordinatorProtocol {
     var navigationPath: NavigationPath { get }
 
     func start()
-    func navigate(to route: Route)
+    func navigate(to route: RecordFeature.Route)
     func pop()
 }
 
-// TODO: maybe this will need to be redone - at least for now it is possible to pop to a launch view
-@Observable class AppCoordinator: AppCoordinatorProtocol {
+@Observable
+class RecordCoordinator: RecordCoordinatorProtocol {
     var navigationPath = NavigationPath()
 
     func start() {
@@ -30,7 +32,7 @@ protocol AppCoordinatorProtocol {
         navigate(to: .recordsList)
     }
 
-    func navigate(to route: Route) {
+    func navigate(to route: RecordFeature.Route) {
         navigationPath.append(route)
     }
 

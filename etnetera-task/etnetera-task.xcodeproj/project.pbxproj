@@ -6,15 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		E826DEBF2E33A87F00C7987B /* Record in Frameworks */ = {isa = PBXBuildFile; productRef = E826DEBE2E33A87F00C7987B /* Record */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		E8F860432E338CC600AB10DB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = E8F8602D2E338CC400AB10DB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = E8F860342E338CC400AB10DB;
-			remoteInfo = "etnetera-task";
-		};
-		E8F8604D2E338CC600AB10DB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = E8F8602D2E338CC400AB10DB /* Project object */;
 			proxyType = 1;
@@ -26,18 +23,23 @@
 /* Begin PBXFileReference section */
 		E8F860352E338CC400AB10DB /* etnetera-task.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "etnetera-task.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8F860422E338CC600AB10DB /* etnetera-taskTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "etnetera-taskTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		E8F8604C2E338CC600AB10DB /* etnetera-taskUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "etnetera-taskUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E8F8609D2E33A63600AB10DB /* Record */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Record; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		E8F860372E338CC400AB10DB /* etnetera-task */ = {
+		E8F860372E338CC400AB10DB /* Resources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "etnetera-task";
+			path = Resources;
 			sourceTree = "<group>";
 		};
-		E8F860452E338CC600AB10DB /* etnetera-taskTests */ = {
+		E8F860452E338CC600AB10DB /* Tests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "etnetera-taskTests";
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		E8F860932E33A5D500AB10DB /* App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = App;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -47,17 +49,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E826DEBF2E33A87F00C7987B /* Record in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		E8F8603F2E338CC600AB10DB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E8F860492E338CC600AB10DB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -70,8 +66,10 @@
 		E8F8602C2E338CC400AB10DB = {
 			isa = PBXGroup;
 			children = (
-				E8F860372E338CC400AB10DB /* etnetera-task */,
-				E8F860452E338CC600AB10DB /* etnetera-taskTests */,
+				E8F8609D2E33A63600AB10DB /* Record */,
+				E8F860932E33A5D500AB10DB /* App */,
+				E8F860372E338CC400AB10DB /* Resources */,
+				E8F860452E338CC600AB10DB /* Tests */,
 				E8F860362E338CC400AB10DB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -81,7 +79,6 @@
 			children = (
 				E8F860352E338CC400AB10DB /* etnetera-task.app */,
 				E8F860422E338CC600AB10DB /* etnetera-taskTests.xctest */,
-				E8F8604C2E338CC600AB10DB /* etnetera-taskUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -102,10 +99,12 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				E8F860372E338CC400AB10DB /* etnetera-task */,
+				E8F860372E338CC400AB10DB /* Resources */,
+				E8F860932E33A5D500AB10DB /* App */,
 			);
 			name = "etnetera-task";
 			packageProductDependencies = (
+				E826DEBE2E33A87F00C7987B /* Record */,
 			);
 			productName = "etnetera-task";
 			productReference = E8F860352E338CC400AB10DB /* etnetera-task.app */;
@@ -125,7 +124,7 @@
 				E8F860442E338CC600AB10DB /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				E8F860452E338CC600AB10DB /* etnetera-taskTests */,
+				E8F860452E338CC600AB10DB /* Tests */,
 			);
 			name = "etnetera-taskTests";
 			packageProductDependencies = (
@@ -133,26 +132,6 @@
 			productName = "etnetera-taskTests";
 			productReference = E8F860422E338CC600AB10DB /* etnetera-taskTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		E8F8604B2E338CC600AB10DB /* etnetera-taskUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = E8F8605C2E338CC600AB10DB /* Build configuration list for PBXNativeTarget "etnetera-taskUITests" */;
-			buildPhases = (
-				E8F860482E338CC600AB10DB /* Sources */,
-				E8F860492E338CC600AB10DB /* Frameworks */,
-				E8F8604A2E338CC600AB10DB /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				E8F8604E2E338CC600AB10DB /* PBXTargetDependency */,
-			);
-			name = "etnetera-taskUITests";
-			packageProductDependencies = (
-			);
-			productName = "etnetera-taskUITests";
-			productReference = E8F8604C2E338CC600AB10DB /* etnetera-taskUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -171,10 +150,6 @@
 						CreatedOnToolsVersion = 16.4;
 						TestTargetID = E8F860342E338CC400AB10DB;
 					};
-					E8F8604B2E338CC600AB10DB = {
-						CreatedOnToolsVersion = 16.4;
-						TestTargetID = E8F860342E338CC400AB10DB;
-					};
 				};
 			};
 			buildConfigurationList = E8F860302E338CC400AB10DB /* Build configuration list for PBXProject "etnetera-task" */;
@@ -186,6 +161,9 @@
 			);
 			mainGroup = E8F8602C2E338CC400AB10DB;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				E826DEBD2E33A87F00C7987B /* XCLocalSwiftPackageReference "Record" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E8F860362E338CC400AB10DB /* Products */;
 			projectDirPath = "";
@@ -193,7 +171,6 @@
 			targets = (
 				E8F860342E338CC400AB10DB /* etnetera-task */,
 				E8F860412E338CC600AB10DB /* etnetera-taskTests */,
-				E8F8604B2E338CC600AB10DB /* etnetera-taskUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -207,13 +184,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		E8F860402E338CC600AB10DB /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		E8F8604A2E338CC600AB10DB /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -237,13 +207,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		E8F860482E338CC600AB10DB /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -251,11 +214,6 @@
 			isa = PBXTargetDependency;
 			target = E8F860342E338CC400AB10DB /* etnetera-task */;
 			targetProxy = E8F860432E338CC600AB10DB /* PBXContainerItemProxy */;
-		};
-		E8F8604E2E338CC600AB10DB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = E8F860342E338CC400AB10DB /* etnetera-task */;
-			targetProxy = E8F8604D2E338CC600AB10DB /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -475,40 +433,6 @@
 			};
 			name = Release;
 		};
-		E8F8605D2E338CC600AB10DB /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5LPLCZ2ALZ;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "lubos.lehota.etnetera-taskUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "etnetera-task";
-			};
-			name = Debug;
-		};
-		E8F8605E2E338CC600AB10DB /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 5LPLCZ2ALZ;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "lubos.lehota.etnetera-taskUITests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "etnetera-task";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -539,16 +463,21 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		E8F8605C2E338CC600AB10DB /* Build configuration list for PBXNativeTarget "etnetera-taskUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				E8F8605D2E338CC600AB10DB /* Debug */,
-				E8F8605E2E338CC600AB10DB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		E826DEBD2E33A87F00C7987B /* XCLocalSwiftPackageReference "Record" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = Record;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E826DEBE2E33A87F00C7987B /* Record */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Record;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = E8F8602D2E338CC400AB10DB /* Project object */;
 }
