@@ -12,7 +12,7 @@ enum StorageType: CaseIterable {
     case remote
 }
 
-struct ActivityRecord: Identifiable, Equatable {
+struct ActivityRecord: Identifiable, Equatable, Sendable  {
     let id: UUID
     let name: String
     let location: String
