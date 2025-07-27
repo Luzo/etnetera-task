@@ -26,21 +26,20 @@ struct FormattedActivityRecord: Identifiable, Equatable {
 @Observable
 @MainActor
 class RecordListViewModel {
-    @ObservationIgnored var loadedRecords: [ActivityRecord] = []
+    @ObservationIgnored
+    var recordsRepository: RecordListRepository = .defaultDependency
+    @ObservationIgnored
+    var loadedRecords: [ActivityRecord] = []
+
     var records: [FormattedActivityRecord] = []
     var selectedFilter: FilterType = .all
 
-
     func onTask() async {
-        Task {
-            await loadRecords()
-        }
+        await loadRecords()
     }
 
     func onRefresh() async {
-        Task {
-            await loadRecords()
-        }
+        await loadRecords()
     }
 
     func filterChanged() async {
@@ -71,8 +70,15 @@ private extension RecordListViewModel {
 
     private func loadRecords() async {
         // TODO: check connection + do some optimizations
-        // TODO: load this through some gateway LOCAL + DB in some extra task
-        loadedRecords = ActivityRecord.mocks
+        let result = await recordsRepository.loadRecords(selectedFilter)
+        switch result {
+        case let .success(records):
+            loadedRecords = records
+        case .failure:
+            // TODO: ???
+            loadedRecords = []
+        }
+
         setRecordsForFilters(filter: selectedFilter)
     }
 }
@@ -99,4 +105,16 @@ extension ActivityRecord {
             .init(id: UUID(uuidString: "3bbb9689-d2e6-484b-9828-f43b5c523ff0")!, name: "Strength", location: "Park", duration: 120, storageType: .remote),
         ]
     }
+}
+
+// TODO: inject this instead
+private extension RecordListRepository {
+    static let defaultDependency = RecordListRepository.gateway(
+        localRepository: .onDevice(
+            onDeviceCache: LocalRecordCache(cache: ActivityRecord.mocks)
+        ),
+        remoteRepository: .remote(
+            recordService: FirestoreRecordService()
+        )
+    )
 }
