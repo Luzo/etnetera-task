@@ -6,17 +6,18 @@
 //
 
 extension RecordListRepository {
-    static func local() -> Self {
+    static func onDevice(
+        // TODO: replace with actual on device cache instead
+        onDeviceCache: OnDeviceCache,
+    ) -> Self {
         return .init(
-            cachedRecords: {
-                fatalError("Not implemented")
-            },
             saveRecord: { record in
-                fatalError("Not implemented")
-
+                await onDeviceCache.addRecord(record)
+                return .success(())
             },
             loadRecords: { _ in
-                fatalError("Not implemented")
+                let records = await onDeviceCache.getRecords()
+                return .success(records)
             }
         )
     }

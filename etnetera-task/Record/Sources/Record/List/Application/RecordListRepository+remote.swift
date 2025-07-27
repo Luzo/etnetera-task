@@ -8,9 +8,6 @@
 extension RecordListRepository {
     static func remote() -> Self {
         return .init(
-            cachedRecords: {
-                fatalError("Not implemented")
-            },
             saveRecord: { record in
                 fatalError("Not implemented")
             },

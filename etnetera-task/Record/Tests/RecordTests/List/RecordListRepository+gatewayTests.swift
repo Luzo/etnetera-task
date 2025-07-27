@@ -25,13 +25,14 @@ struct RecordListRepositoryGatewayTests {
                 #expect(mockedRecord == record)
 
                 confirmation.confirm()
+                return .success(())
             })
 
             let sut = RecordListRepository.gateway(
                 localRepository: storageType == .local ? mockedRepository : .mock(),
                 remoteRepository: storageType == .remote ? mockedRepository : .mock(),
             )
-            try await sut.saveRecord(mockedRecord)
+            try await sut.saveRecord(mockedRecord).get()
         }
     }
 
@@ -41,14 +42,14 @@ struct RecordListRepositoryGatewayTests {
         let filterType = FilterType.local
 
         let mockedRepository: RecordListRepository = .mock(loadRecords: { filter in
-            [mockedRecord]
+            .success([mockedRecord])
         })
 
         let sut = RecordListRepository.gateway(
             localRepository: filterType == .local ? mockedRepository : .mock(),
             remoteRepository: filterType == .remote ? mockedRepository : .mock(),
         )
-        let records = try await sut.loadRecords(filterType)
+        let records = try await sut.loadRecords(filterType).get()
         #expect(records == [mockedRecord])
     }
 }

@@ -7,11 +7,9 @@
 
 // TODO: check if protocol witness is really a best shot in here, since the strategy might change and it does not seem to
 // be very type safe
-// TODO: Might replace throw with Result for ErrorTypeSafety
 struct RecordListRepository: Sendable {
-    var cachedRecords: @Sendable () -> [ActivityRecord]
-    var saveRecord: @Sendable (_ record: ActivityRecord) async throws -> Void
-    var loadRecords: @Sendable (_ filter: FilterType) async throws -> [ActivityRecord]
+    var saveRecord: @Sendable (_ record: ActivityRecord) async -> Result<Void, RecordListRepositoryError>
+    var loadRecords: @Sendable (_ filter: FilterType) async -> Result<[ActivityRecord], RecordListRepositoryError>
 }
 
 enum RecordListRepositoryError: Error {

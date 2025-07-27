@@ -9,14 +9,17 @@
 
 extension RecordListRepository {
     static func mock(
-        cachedRecords: @Sendable @escaping () -> [ActivityRecord] = { [] },
-        saveRecord: @Sendable @escaping (_ record: ActivityRecord) async throws -> Void = { _ in
-            throw MockError.unexpectedCall
+        saveRecord: @Sendable @escaping (
+            _ record: ActivityRecord
+        ) async -> Result<Void, RecordListRepositoryError> = { _ in
+            .failure(.serverError)
         },
-        loadRecords: @Sendable @escaping (_ filter: FilterType) async throws -> [ActivityRecord] = { _ in
-            throw MockError.unexpectedCall
+        loadRecords: @Sendable @escaping (
+            _ filter: FilterType
+        ) async -> Result<[ActivityRecord], RecordListRepositoryError> = { _ in
+            .failure(.serverError)
         }
     ) -> Self {
-        .init(cachedRecords: cachedRecords, saveRecord: saveRecord, loadRecords: loadRecords)
+        .init(saveRecord: saveRecord, loadRecords: loadRecords)
     }
 }

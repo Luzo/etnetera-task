@@ -11,27 +11,39 @@ extension RecordListRepository {
         remoteRepository: RecordListRepository
     ) -> Self {
         return .init(
-            cachedRecords: {
-                localRepository.cachedRecords() + remoteRepository.cachedRecords()
-            },
             saveRecord: { record in
                 switch record.storageType {
                 case .local:
-                    return try await localRepository.saveRecord(record)
+                    return await localRepository.saveRecord(record)
                 case .remote:
-                    return try await remoteRepository.saveRecord(record)
+                    return await remoteRepository.saveRecord(record)
                 }
             },
             loadRecords: { filterType in
                 switch filterType {
                 case .local:
-                    return try await localRepository.loadRecords(filterType)
+                    return await localRepository.loadRecords(filterType)
                 case .remote:
-                    return try await remoteRepository.loadRecords(filterType)
+                    return await remoteRepository.loadRecords(filterType)
                 case .all:
-                    async let local = localRepository.loadRecords(.local)
-                    async let remote = remoteRepository.loadRecords(.remote)
-                    return try await local + remote
+                    async let localResult = localRepository.loadRecords(.local)
+                    async let remoteResult = remoteRepository.loadRecords(.remote)
+
+                    let results = await (localResult, remoteResult)
+
+                    // TODO: this will need some extra look for better error handling
+                    switch results {
+                    case (.success(let localRecords), .success(let remoteRecords)):
+                        return .success(localRecords + remoteRecords)
+                    case (.failure, .success(let remoteRecords)):
+                        return .success(remoteRecords)
+                    case (.success(let localRecords), .failure):
+                        return .success(localRecords)
+                    case (.failure, _):
+                        return .failure(.serverError)
+                    case (_, .failure):
+                        return .failure(.serverError)
+                    }
                 }
             }
         )
