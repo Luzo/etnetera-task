@@ -30,7 +30,7 @@ struct RecordListView: View {
             .pickerStyle(SegmentedPickerStyle())
             .padding()
             .onChange(of: viewModel.selectedFilter) { _, _ in
-                Task { 
+                Task {
                     await viewModel.filterChanged()
                 }
             }

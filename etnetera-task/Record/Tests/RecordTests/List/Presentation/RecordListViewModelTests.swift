@@ -14,22 +14,22 @@ struct RecordListViewModelTests {
     @Test
     func sut_should_load_records_on_refresh() async throws {
         let sut = await RecordListViewModel()
+        await sut._setMockReturningRepository(ActivityRecord.mocks)
 
         await #expect(sut.loadedRecords.isEmpty)
 
         await sut.onRefresh()
-
         await #expect(sut.loadedRecords == ActivityRecord.mocks)
     }
 
     @Test
     func sut_should_load_records_on_task() async throws {
         let sut = await RecordListViewModel()
+        await sut._setMockReturningRepository(ActivityRecord.mocks)
 
         await #expect(sut.loadedRecords.isEmpty)
 
         await sut.onTask()
-
         await #expect(sut.loadedRecords == ActivityRecord.mocks)
     }
 
@@ -39,20 +39,44 @@ struct RecordListViewModelTests {
             (
                 FilterType.all,
                 [
-                    FormattedActivityRecord(id: .with(intValue: 1), name: "1", location: "1l", duration: "0:01", storageType: .local),
-                    FormattedActivityRecord(id: .with(intValue: 2), name: "2", location: "2l", duration: "0:02", storageType: .remote),
+                    FormattedActivityRecord(
+                        id: .with(intValue: 1),
+                        name: "1",
+                        location: "1l",
+                        duration: "0:01",
+                        storageType: .local
+                    ),
+                    FormattedActivityRecord(
+                        id: .with(intValue: 2),
+                        name: "2",
+                        location: "2l",
+                        duration: "0:02",
+                        storageType: .remote
+                    ),
                 ]
             ),
             (
                 FilterType.local,
                 [
-                    FormattedActivityRecord(id: .with(intValue: 1), name: "1", location: "1l", duration: "0:01", storageType: .local),
+                    FormattedActivityRecord(
+                        id: .with(intValue: 1),
+                        name: "1",
+                        location: "1l",
+                        duration: "0:01",
+                        storageType: .local
+                    ),
                 ]
             ),
             (
                 FilterType.remote,
                 [
-                    FormattedActivityRecord(id: .with(intValue: 2), name: "2", location: "2l", duration: "0:02", storageType: .remote),
+                    FormattedActivityRecord(
+                        id: .with(intValue: 2),
+                        name: "2",
+                        location: "2l",
+                        duration: "0:02",
+                        storageType: .remote
+                    ),
                 ]
             )
         ]
@@ -63,6 +87,7 @@ struct RecordListViewModelTests {
     ) async throws {
         let sut = await RecordListViewModel()
         await sut._setFilter(selectedFilter)
+
         await #expect(sut.loadedRecords.isEmpty)
         await #expect(sut.records.isEmpty)
 
@@ -87,42 +112,12 @@ private extension RecordListViewModel {
     func _setLoadedRecords(_ records: [ActivityRecord]) async {
         loadedRecords = records
     }
-}
 
-private extension UUID {
-    static func with(intValue: Int) -> Self {
-        let valueText = "\(intValue)"
-        let length = valueText.count
-        let text = String(repeating: "0", count: 32-length) + valueText
-
-        guard let uuidText = text.formatAsUUID(), let uuid = UUID(uuidString: uuidText) else {
-            // TODO: move and make throwable
-            fatalError()
-        }
-
-        return uuid
+    func _setMockReturningRepository(_ records: [ActivityRecord]) async {
+        recordsRepository = .mock(
+            loadRecords: { _ in
+                return .success(records)
+            }
+        )
     }
 }
-
-private extension String {
-    func formatAsUUID() -> String? {
-        let cleaned = replacingOccurrences(of: "-", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
-
-        guard cleaned.count == 32 else { return nil }
-
-        let indices = [8, 12, 16, 20]
-        var lastIndex = cleaned.startIndex
-        var parts = [String]()
-
-        for index in indices {
-            let nextIndex = cleaned.index(cleaned.startIndex, offsetBy: index)
-            parts.append(String(cleaned[lastIndex..<nextIndex]))
-            lastIndex = nextIndex
-        }
-
-        parts.append(String(cleaned[lastIndex...]))
-
-        return parts.joined(separator: "-")
-    }
-}
-
