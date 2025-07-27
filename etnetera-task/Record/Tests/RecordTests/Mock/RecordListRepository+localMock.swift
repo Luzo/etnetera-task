@@ -7,19 +7,20 @@
 
 @testable import Record
 
-actor LocalRecordCacheMock: OnDeviceCache {
+actor LocalRecordCacheMock: OnDeviceRecordService {
     var records: [ActivityRecord] = []
 
     init(records: [ActivityRecord] = []) {
         self.records = records
     }
 
-    func getRecords() -> [ActivityRecord] {
-        records
+    func loadRecords() async -> Result<[ActivityRecord], Never> {
+        .success(records)
     }
 
-    func addRecord(_ newRecord: ActivityRecord) {
-        records.append(newRecord)
+    func saveRecord(_ record: ActivityRecord) async -> Result<Void, Never> {
+        records.append(record)
+        return .success(())
     }
 }
 
