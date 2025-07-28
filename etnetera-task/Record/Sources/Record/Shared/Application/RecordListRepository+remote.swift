@@ -10,19 +10,48 @@ import Factory
 // TODO: add LocalRecordCache here to ease out on requests
 extension RecordListRepository {
     static func remote(
-        recordService: some RemoteRecordService
+        recordService: some RemoteRecordService,
+        converter: ActivityRecordConverter
     ) -> Self {
         return .init(
             saveRecord: { record in
-                await recordService.saveRecord(record)
+                let recordToSave = converter.fromDomain(record)
+
+                return await recordService.saveRecord(recordToSave)
                     .mapError(\.asRecordListRepositoryError)
 
             },
             loadRecords: { _ in
-                await recordService.loadRecords()
-                    .mapError(\.asRecordListRepositoryError)
+                let recordsResult = await recordService.loadRecords()
+
+                if let error = recordsResult.failureOrNil {
+                    return .failure(error.asRecordListRepositoryError)
+                }
+
+                let converted = (recordsResult.successOrNil ?? []).map { converter.toDomain($0) }
+                let successes = converted.compactMap(\.successOrNil)
+                let errors = converted.compactMap(\.failureOrNil)
+
+                if successes.isEmpty, let firstError = errors.first {
+                    return .failure(firstError.asRecordListRepositoryError)
+                }
+
+                return .success(successes)
             }
         )
+    }
+}
+
+private extension ActivityRecordConverterError {
+    var asRemoteRecordServiceError: RemoteRecordServiceError {
+        switch self {
+        case .conversionError:
+            return .serverError
+        }
+    }
+
+    var asRecordListRepositoryError: RecordListRepositoryError {
+        asRemoteRecordServiceError.asRecordListRepositoryError
     }
 }
 
@@ -38,7 +67,8 @@ private extension RemoteRecordServiceError {
 extension Container {
     func remoteRecordListRepository(recordService: some RemoteRecordService) -> Factory<RecordListRepository> {
         Factory(self) { RecordListRepository.remote(
-            recordService: recordService
+            recordService: recordService,
+            converter: self.activityRecordConverter()
         )}
     }
 }
