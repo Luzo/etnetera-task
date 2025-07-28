@@ -57,7 +57,7 @@ extension Container {
         Factory(self) { RecordListRepository.gateway(
             localRepository: self.onDeviceRecordListRepository(
                 // TODO: replace with actual on device cache instead
-                onDeviceCache: self.localRecordCache(cache: ActivityRecord.mocks)()
+                onDeviceCache: self.localRecordCache(cache: [])()
             )(),
             remoteRepository: self.remoteRecordListRepository(
                 recordService: self.firestoreRecordService()
