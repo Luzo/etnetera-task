@@ -14,16 +14,16 @@
   "testTargets" : [
     {
       "target" : {
-        "containerPath" : "container:etnetera-task.xcodeproj",
-        "identifier" : "E8F860412E338CC600AB10DB",
-        "name" : "etnetera-taskTests"
+        "containerPath" : "container:Record",
+        "identifier" : "RecordTests",
+        "name" : "RecordTests"
       }
     },
     {
       "target" : {
-        "containerPath" : "container:Record",
-        "identifier" : "RecordTests",
-        "name" : "RecordTests"
+        "containerPath" : "container:etnetera-task.xcodeproj",
+        "identifier" : "E8F860412E338CC600AB10DB",
+        "name" : "etnetera-taskTests"
       }
     }
   ],

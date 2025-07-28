@@ -28,19 +28,32 @@
 		E8F8609D2E33A63600AB10DB /* Record */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Record; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		E86862922E37E4E00046F5BA /* Exceptions for "App" folder in "etnetera-task" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Tests/App/AppCoordinatorTests.swift,
+				Tests/AppTestPlan.xctestplan,
+			);
+			target = E8F860342E338CC400AB10DB /* etnetera-task */;
+		};
+		E86862932E37E4E00046F5BA /* Exceptions for "App" folder in "etnetera-taskTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Tests/App/AppCoordinatorTests.swift,
+				Tests/AppTestPlan.xctestplan,
+			);
+			target = E8F860412E338CC600AB10DB /* etnetera-taskTests */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		E8F860372E338CC400AB10DB /* Resources */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Resources;
-			sourceTree = "<group>";
-		};
-		E8F860452E338CC600AB10DB /* Tests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Tests;
-			sourceTree = "<group>";
-		};
 		E8F860932E33A5D500AB10DB /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E86862922E37E4E00046F5BA /* Exceptions for "App" folder in "etnetera-task" target */,
+				E86862932E37E4E00046F5BA /* Exceptions for "App" folder in "etnetera-taskTests" target */,
+			);
 			path = App;
 			sourceTree = "<group>";
 		};
@@ -72,8 +85,6 @@
 			children = (
 				E8F8609D2E33A63600AB10DB /* Record */,
 				E8F860932E33A5D500AB10DB /* App */,
-				E8F860372E338CC400AB10DB /* Resources */,
-				E8F860452E338CC600AB10DB /* Tests */,
 				E8F860362E338CC400AB10DB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,7 +114,6 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				E8F860372E338CC400AB10DB /* Resources */,
 				E8F860932E33A5D500AB10DB /* App */,
 			);
 			name = "etnetera-task";
@@ -128,9 +138,6 @@
 			);
 			dependencies = (
 				E8F860442E338CC600AB10DB /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				E8F860452E338CC600AB10DB /* Tests */,
 			);
 			name = "etnetera-taskTests";
 			packageProductDependencies = (

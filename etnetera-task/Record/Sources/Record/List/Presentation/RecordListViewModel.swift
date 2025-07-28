@@ -77,14 +77,18 @@ private extension RecordListViewModel {
     }
 
     private func loadRecords() async {
-        // TODO: check connection + do some optimizations
+        // TODO: check connection for remote
         let result = await recordsRepository.loadRecords(selectedFilter)
+        loadedRecords.removeAll {
+            selectedFilter.acceptedStorageTypes.contains($0.storageType)
+        }
+
         switch result {
         case let .success(records):
-            loadedRecords = records
+            loadedRecords.append(contentsOf: records)
         case .failure:
             // TODO: ???
-            loadedRecords = []
+            break
         }
 
         setRecordsForFilters(filter: selectedFilter)
