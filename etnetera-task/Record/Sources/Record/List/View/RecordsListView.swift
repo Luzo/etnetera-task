@@ -5,17 +5,12 @@
 //  Created by Lubos Lehota on 25/07/2025.
 //
 
+import Factory
 import SwiftUI
 
 // TODO: Localizations
 struct RecordListView: View {
-    // TODO: inject coordinator instead
-    private let onAddRecordTap: () -> Void
-    @Bindable private var viewModel: RecordListViewModel = .init()
-
-    init(onAddRecordTap: @escaping () -> Void) {
-        self.onAddRecordTap = onAddRecordTap
-    }
+    @InjectedObservable(\.recordListViewModel) var viewModel
 
     var body: some View {
         VStack {
@@ -44,7 +39,9 @@ struct RecordListView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    onAddRecordTap()
+                    Task {
+                        await viewModel.onAddTapped()
+                    }
                 } label: {
                     Image(systemName: "plus")
                 }

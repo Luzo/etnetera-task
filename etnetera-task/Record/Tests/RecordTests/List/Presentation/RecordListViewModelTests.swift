@@ -5,32 +5,43 @@
 //  Created by Lubos Lehota on 25/07/2025.
 //
 
+import Factory
+import FactoryTesting
 import Foundation
 import Testing
 
 @testable import Record
 
+@Suite(.container)
 struct RecordListViewModelTests {
     @Test
+    @MainActor
     func sut_should_load_records_on_refresh() async throws {
-        let sut = await RecordListViewModel()
-        await sut._setMockReturningRepository(ActivityRecord.mocks)
+        let expectedRecords = ActivityRecord.mocks
+        Container.shared.gatewayRecordListRepository.register {
+            .mock(loadRecords: { _ in return .success(expectedRecords) } )
+        }
+        let sut = RecordListViewModel()
 
-        await #expect(sut.loadedRecords.isEmpty)
+        #expect(sut.loadedRecords.isEmpty)
 
         await sut.onRefresh()
-        await #expect(sut.loadedRecords == ActivityRecord.mocks)
+        #expect(sut.loadedRecords == expectedRecords)
     }
 
     @Test
+    @MainActor
     func sut_should_load_records_on_task() async throws {
-        let sut = await RecordListViewModel()
-        await sut._setMockReturningRepository(ActivityRecord.mocks)
+        let expectedRecords = ActivityRecord.mocks
+        Container.shared.gatewayRecordListRepository.register {
+            .mock(loadRecords: { _ in return .success(expectedRecords) } )
+        }
+        let sut = RecordListViewModel()
 
-        await #expect(sut.loadedRecords.isEmpty)
+        #expect(sut.loadedRecords.isEmpty)
 
         await sut.onTask()
-        await #expect(sut.loadedRecords == ActivityRecord.mocks)
+        #expect(sut.loadedRecords == ActivityRecord.mocks)
     }
 
     @Test(
@@ -81,26 +92,40 @@ struct RecordListViewModelTests {
             )
         ]
     )
+    @MainActor
     func sut_should_filter_records_on_filter_changed(
         selectedFilter: FilterType,
         expectedFormattedModels: [FormattedActivityRecord]
     ) async throws {
-        let sut = await RecordListViewModel()
+        let sut = RecordListViewModel()
         await sut._setFilter(selectedFilter)
 
-        await #expect(sut.loadedRecords.isEmpty)
-        await #expect(sut.records.isEmpty)
+        #expect(sut.loadedRecords.isEmpty)
+        #expect(sut.records.isEmpty)
 
         let activityRecords: [ActivityRecord] = [
             .init(id: .with(intValue: 1), name: "1", location: "1l", duration: 1, storageType: .local),
             .init(id: .with(intValue: 2), name: "2", location: "2l", duration: 2, storageType: .remote),
         ]
         await sut._setLoadedRecords(activityRecords)
-        await #expect(sut.loadedRecords == activityRecords)
+        #expect(sut.loadedRecords == activityRecords)
 
         await sut.filterChanged()
-        await #expect(sut.records == expectedFormattedModels)
+        #expect(sut.records == expectedFormattedModels)
+    }
 
+    @Test
+    @MainActor
+    func sut_should_navigate_to_add_record_on_add_tapped() async throws {
+        Container.shared.recordCoordinator.register {
+            RecordCoordinatorSpy()
+        }
+
+        let spy = try #require(Container.shared.recordCoordinator() as? RecordCoordinatorSpy)
+        let sut = RecordListViewModel()
+        await sut.onAddTapped()
+
+        #expect(spy.spiablePath == [.addRecord])
     }
 }
 
@@ -111,13 +136,5 @@ private extension RecordListViewModel {
 
     func _setLoadedRecords(_ records: [ActivityRecord]) async {
         loadedRecords = records
-    }
-
-    func _setMockReturningRepository(_ records: [ActivityRecord]) async {
-        recordsRepository = .mock(
-            loadRecords: { _ in
-                return .success(records)
-            }
-        )
     }
 }

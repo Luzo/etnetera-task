@@ -5,6 +5,7 @@
 //  Created by Lubos Lehota on 25/07/2025.
 //
 
+import Factory
 import Observation
 import SwiftUI
 
@@ -16,7 +17,7 @@ enum RecordFeature {
 }
 
 protocol RecordCoordinatorProtocol {
-    var navigationPath: NavigationPath { get }
+    var navigationPath: NavigationPath { get set }
 
     func start()
     func navigate(to route: RecordFeature.Route)
@@ -38,5 +39,12 @@ class RecordCoordinator: RecordCoordinatorProtocol {
 
     func pop() {
         navigationPath.removeLast()
+    }
+}
+
+extension Container {
+    var recordCoordinator: Factory<RecordCoordinatorProtocol> {
+        Factory(self) { RecordCoordinator() }
+            .singleton
     }
 }

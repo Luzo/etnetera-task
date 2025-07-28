@@ -5,6 +5,8 @@
 //  Created by Lubos Lehota on 27/07/2025.
 //
 
+import Factory
+
 actor LocalRecordCache: OnDeviceRecordService {
     var cache: [ActivityRecord] = []
 
@@ -19,5 +21,11 @@ actor LocalRecordCache: OnDeviceRecordService {
     func saveRecord(_ record: ActivityRecord) async -> Result<Void, Never> {
         cache.append(record)
         return .success(())
+    }
+}
+
+extension Container {
+    func localRecordCache(cache: [ActivityRecord]) -> Factory<some OnDeviceRecordService> {
+        Factory(self) { LocalRecordCache(cache: cache) }
     }
 }

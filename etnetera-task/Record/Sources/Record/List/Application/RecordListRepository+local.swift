@@ -5,10 +5,11 @@
 //  Created by Lubos Lehota on 26/07/2025.
 //
 
+import Factory
+
 // TODO: add LocalRecordCache here to ease out on requests
 extension RecordListRepository {
     static func onDevice(
-        // TODO: replace with actual on device cache instead
         onDeviceCache: some OnDeviceRecordService,
     ) -> Self {
         return .init(
@@ -24,3 +25,10 @@ extension RecordListRepository {
     }
 }
 
+extension Container {
+    func onDeviceRecordListRepository(onDeviceCache: some OnDeviceRecordService) -> Factory<RecordListRepository> {
+        Factory(self) { RecordListRepository.onDevice(
+            onDeviceCache: onDeviceCache
+        )}
+    }
+}

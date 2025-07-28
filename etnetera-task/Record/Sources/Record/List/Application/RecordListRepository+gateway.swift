@@ -5,6 +5,8 @@
 //  Created by Lubos Lehota on 26/07/2025.
 //
 
+import Factory
+
 extension RecordListRepository {
     static func gateway(
         localRepository: RecordListRepository,
@@ -47,5 +49,19 @@ extension RecordListRepository {
                 }
             }
         )
+    }
+}
+
+extension Container {
+    var gatewayRecordListRepository: Factory<RecordListRepository> {
+        Factory(self) { RecordListRepository.gateway(
+            localRepository: self.onDeviceRecordListRepository(
+                // TODO: replace with actual on device cache instead
+                onDeviceCache: self.localRecordCache(cache: ActivityRecord.mocks)()
+            )(),
+            remoteRepository: self.remoteRecordListRepository(
+                recordService: self.firestoreRecordService()
+            )()
+        )}
     }
 }
