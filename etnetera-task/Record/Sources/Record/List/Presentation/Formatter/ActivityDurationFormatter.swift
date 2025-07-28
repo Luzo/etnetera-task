@@ -5,6 +5,7 @@
 //  Created by Lubos Lehota on 25/07/2025.
 //
 
+import Factory
 import Foundation
 
 struct ActivityDurationFormatter {
@@ -18,5 +19,11 @@ struct ActivityDurationFormatter {
         } else {
             return String(format: "%d:%02d", minutes, seconds)
         }
+    }
+}
+
+extension Container {
+    var activityDurationFormatter: Factory<ActivityDurationFormatter> {
+        Factory(self) { ActivityDurationFormatter() }
     }
 }

@@ -5,6 +5,7 @@
 //  Created by Lubos Lehota on 25/07/2025.
 //
 
+import Factory
 import Foundation
 import Observation
 
@@ -27,13 +28,20 @@ struct FormattedActivityRecord: Identifiable, Equatable {
 @MainActor
 class RecordListViewModel {
     @ObservationIgnored
-    var recordsRepository: RecordListRepository = .defaultDependency
+    @Injected(\.gatewayRecordListRepository) private var recordsRepository
+    @ObservationIgnored
+    @Injected(\.activityDurationFormatter) private var durationFormatter
+    @ObservationIgnored
+    @Injected(\.recordCoordinator) private var coordinator
+
     @ObservationIgnored
     var loadedRecords: [ActivityRecord] = []
 
     var records: [FormattedActivityRecord] = []
     var selectedFilter: FilterType = .all
+}
 
+extension RecordListViewModel {
     func onTask() async {
         await loadRecords()
     }
@@ -45,14 +53,15 @@ class RecordListViewModel {
     func filterChanged() async {
         setRecordsForFilters(filter: selectedFilter)
     }
+
+    func onAddTapped() async {
+        coordinator.navigate(to: .addRecord)
+    }
 }
 
 private extension RecordListViewModel {
 
     private func setRecordsForFilters(filter: FilterType) {
-        // TODO: Add as a dependency instead
-        let durationFormatter = ActivityDurationFormatter()
-
         records = loadedRecords
             .filter {
                 filter.acceptedStorageTypes.contains($0.storageType)
@@ -96,6 +105,16 @@ private extension FilterType {
     }
 }
 
+
+extension Container {
+    var recordListViewModel: Factory<RecordListViewModel> {
+        Factory(self) { @MainActor in
+            RecordListViewModel()
+        }
+        .unique
+    }
+}
+
 // TODO: move to tests when implemented
 extension ActivityRecord {
     static var mocks: [Self] {
@@ -105,16 +124,4 @@ extension ActivityRecord {
             .init(id: UUID(uuidString: "3bbb9689-d2e6-484b-9828-f43b5c523ff0")!, name: "Strength", location: "Park", duration: 120, storageType: .remote),
         ]
     }
-}
-
-// TODO: inject this instead
-private extension RecordListRepository {
-    static let defaultDependency = RecordListRepository.gateway(
-        localRepository: .onDevice(
-            onDeviceCache: LocalRecordCache(cache: ActivityRecord.mocks)
-        ),
-        remoteRepository: .remote(
-            recordService: FirestoreRecordService()
-        )
-    )
 }

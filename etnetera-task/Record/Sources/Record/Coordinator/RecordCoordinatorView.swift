@@ -5,37 +5,31 @@
 //  Created by Lubos Lehota on 25/07/2025.
 //
 
+import Factory
 import SwiftUI
 
 public struct RecordCoordinatorView: View {
-    // TODO: injection?
-    @Bindable private var coordinator: RecordCoordinator
+    @InjectedObservable(\.recordCoordinatorViewModel) var viewModel
 
-    public init() {
-        coordinator = RecordCoordinator()
-    }
+    public init() {}
 
     public var body: some View {
         // TODO: this could be probably in APP, navigation Destination would stay with some extra generc protocol
         // coordinator would be passed through dependencies, thus needed in some reusable package imported everywhere
-        NavigationStack(path: $coordinator.navigationPath) {
+        NavigationStack(path: $viewModel.coordinator.navigationPath) {
             EmptyView()
                 .navigationDestination(for: RecordFeature.Route.self) { route in
                         switch route {
                         case .recordsList:
-                            RecordListView(
-                                onAddRecordTap: {
-                                    coordinator.navigate(to: .addRecord)
-                                }
-                            )
-                            .navigationBarBackButtonHidden()
+                            RecordListView()
+                                .navigationBarBackButtonHidden()
                         case .addRecord:
                             EmptyView()
                         }
                     }
         }
         .onAppear {
-            coordinator.start()
+            viewModel.coordinator.start()
         }
     }
 }

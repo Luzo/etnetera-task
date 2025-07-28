@@ -5,7 +5,6 @@
 //  Created by Lubos Lehota on 25/07/2025.
 //
 
-import SwiftUI
 import Testing
 @testable import Record
 
@@ -37,32 +36,5 @@ struct RecordCoordinatorTests {
 
         #expect(sut.navigationPath.count == 1)
         #expect(sut.spiablePath.first == .recordsList)
-    }
-}
-
-private class RecordCoordinatorSpy {
-    private let coordinator = RecordCoordinator()
-    var spiablePath: [RecordFeature.Route] = []
-
-    func startWithPath(path: [RecordFeature.Route]) {
-        path.forEach(navigate(to:))
-    }
-}
-
-extension RecordCoordinatorSpy: RecordCoordinatorProtocol {
-    var navigationPath: NavigationPath { coordinator.navigationPath }
-
-    func start() {
-        coordinator.start()
-    }
-
-    func navigate(to route: RecordFeature.Route) {
-        spiablePath.append(route)
-        coordinator.navigate(to: route)
-    }
-
-    func pop() {
-        spiablePath.removeLast()
-        coordinator.pop()
     }
 }
