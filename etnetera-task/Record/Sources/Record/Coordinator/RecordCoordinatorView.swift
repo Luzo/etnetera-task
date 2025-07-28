@@ -24,7 +24,7 @@ public struct RecordCoordinatorView: View {
                             RecordListView()
                                 .navigationBarBackButtonHidden()
                         case .addRecord:
-                            EmptyView()
+                            AddRecordView()
                         }
                     }
         }
