@@ -27,5 +27,6 @@ actor LocalRecordCache: OnDeviceRecordService {
 extension Container {
     func localRecordCache(cache: [ActivityRecord]) -> Factory<some OnDeviceRecordService> {
         Factory(self) { LocalRecordCache(cache: cache) }
+            .singleton
     }
 }

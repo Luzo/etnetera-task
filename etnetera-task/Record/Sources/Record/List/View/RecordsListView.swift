@@ -17,7 +17,7 @@ struct RecordListView: View {
             Picker("Filter", selection: $viewModel.selectedFilter) {
                 ForEach(FilterType.allCases, id: \.self) { filter in
                     Text(
-                        [filter.colorText, filter.rawValue].compactMap { $0 }.joined(separator: "\t")
+                        [filter.colorText, filter.title].compactMap { $0 }.joined(separator: "\t")
                     )
                     .tag(filter)
                 }

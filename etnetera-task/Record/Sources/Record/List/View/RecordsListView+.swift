@@ -1,5 +1,5 @@
 //
-//  View+Extension.swift
+//  View+.swift
 //  Record
 //
 //  Created by Lubos Lehota on 25/07/2025.
@@ -31,6 +31,19 @@ extension FilterType {
     }
 }
 
+// TODO: Do localizations instead
+extension FilterType {
+    var title: String {
+        switch self {
+        case .all:
+            return "All"
+        case .local:
+            return "Local"
+        case .remote:
+            return "Remote"
+        }
+    }
+}
 
 private enum ColorText: String {
     case local = "🔵"

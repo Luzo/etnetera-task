@@ -9,11 +9,10 @@ import Factory
 import Foundation
 import Observation
 
-// TODO: Do localizations elsewhere
-enum FilterType: String, CaseIterable {
-    case all = "All"
-    case local = "Local"
-    case remote = "Remote"
+enum FilterType: CaseIterable {
+    case all
+    case local
+    case remote
 }
 
 struct FormattedActivityRecord: Identifiable, Equatable {
@@ -104,7 +103,6 @@ private extension FilterType {
         }
     }
 }
-
 
 extension Container {
     var recordListViewModel: Factory<RecordListViewModel> {
