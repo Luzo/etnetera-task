@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "685A0745-B40A-45D2-9ED4-A98549F52A48",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "RecordTests",
+        "name" : "RecordTests"
+      }
+    }
+  ],
+  "version" : 1
+}

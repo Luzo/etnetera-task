@@ -13,7 +13,7 @@ import Testing
 @testable import Record
 
 @Suite(.container)
-struct RecordListViewModelTests {
+private struct RecordListViewModelTests {
     @Test
     @MainActor
     func sut_should_load_records_on_refresh() async throws {
@@ -44,54 +44,23 @@ struct RecordListViewModelTests {
         #expect(sut.loadedRecords == ActivityRecord.mocks)
     }
 
-    @Test(
-        .serialized,
-        arguments: [
-            (
-                FilterType.all,
-                [
-                    FormattedActivityRecord(
-                        id: .with(intValue: 1),
-                        name: "1",
-                        location: "1l",
-                        duration: "0:01",
-                        storageType: .local
-                    ),
-                    FormattedActivityRecord(
-                        id: .with(intValue: 2),
-                        name: "2",
-                        location: "2l",
-                        duration: "0:02",
-                        storageType: .remote
-                    ),
-                ]
-            ),
-            (
-                FilterType.local,
-                [
-                    FormattedActivityRecord(
-                        id: .with(intValue: 1),
-                        name: "1",
-                        location: "1l",
-                        duration: "0:01",
-                        storageType: .local
-                    ),
-                ]
-            ),
-            (
-                FilterType.remote,
-                [
-                    FormattedActivityRecord(
-                        id: .with(intValue: 2),
-                        name: "2",
-                        location: "2l",
-                        duration: "0:02",
-                        storageType: .remote
-                    ),
-                ]
-            )
-        ]
-    )
+    @Test(arguments: testWipeActiveFilterResultsInputs)
+    @MainActor
+    func sut_should_only_wipe_active_filter_results_on_reload(
+        input: TestWipeActiveFilterResultsInput
+    ) async throws {
+        Container.shared.gatewayRecordListRepository.register {
+            .mock(loadRecords: { _ in return .success([input.newRecord]) } )
+        }
+        let sut = RecordListViewModel()
+        await sut._setFilter(input.filter)
+        await sut._setLoadedRecords(input.storedRecords)
+
+        await sut.onRefresh()
+        #expect(sut.loadedRecords == input.newStoredRecords)
+    }
+
+    @Test(.serialized, arguments: testOnFilterChangedInputs)
     @MainActor
     func sut_should_filter_records_on_filter_changed(
         selectedFilter: FilterType,
@@ -136,5 +105,90 @@ private extension RecordListViewModel {
 
     func _setLoadedRecords(_ records: [ActivityRecord]) async {
         loadedRecords = records
+    }
+}
+
+private extension RecordListViewModelTests {
+    static var testOnFilterChangedInputs: [(FilterType, [FormattedActivityRecord])] {
+        [
+            (
+                FilterType.all,
+                [
+                    FormattedActivityRecord(
+                        id: .with(intValue: 1),
+                        name: "1",
+                        location: "1l",
+                        duration: "0:01",
+                        storageType: .local
+                    ),
+                    FormattedActivityRecord(
+                        id: .with(intValue: 2),
+                        name: "2",
+                        location: "2l",
+                        duration: "0:02",
+                        storageType: .remote
+                    ),
+                ]
+            ),
+            (
+                FilterType.local,
+                [
+                    FormattedActivityRecord(
+                        id: .with(intValue: 1),
+                        name: "1",
+                        location: "1l",
+                        duration: "0:01",
+                        storageType: .local
+                    ),
+                ]
+            ),
+            (
+                FilterType.remote,
+                [
+                    FormattedActivityRecord(
+                        id: .with(intValue: 2),
+                        name: "2",
+                        location: "2l",
+                        duration: "0:02",
+                        storageType: .remote
+                    ),
+                ]
+            )
+        ]
+    }
+
+    struct TestWipeActiveFilterResultsInput {
+        let filter: FilterType
+        let newRecord: ActivityRecord
+        let storedRecords: [ActivityRecord]
+        let newStoredRecords: [ActivityRecord]
+    }
+
+    static var testWipeActiveFilterResultsInputs: [TestWipeActiveFilterResultsInput] {
+        let localMock: ActivityRecord = .mock(uuid: .with(intValue: 1), storageType: .local)
+        let remoteMock: ActivityRecord = .mock(uuid: .with(intValue: 0), storageType: .remote)
+        let previousRecords: [ActivityRecord] = [localMock, remoteMock]
+        let newResult: ActivityRecord = .mock(uuid: .with(intValue: 2))
+
+        return [
+            .init(
+                filter: .all,
+                newRecord: newResult,
+                storedRecords: previousRecords,
+                newStoredRecords: [newResult]
+            ),
+            .init(
+                filter: .local,
+                newRecord: newResult,
+                storedRecords: previousRecords,
+                newStoredRecords: [remoteMock] + [newResult]
+            ),
+            .init(
+                filter: .remote,
+                newRecord: newResult,
+                storedRecords: previousRecords,
+                newStoredRecords: [localMock] + [newResult]
+            )
+        ]
     }
 }
