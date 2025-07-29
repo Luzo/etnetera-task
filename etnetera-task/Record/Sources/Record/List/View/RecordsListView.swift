@@ -8,13 +8,12 @@
 import Factory
 import SwiftUI
 
-// TODO: Localizations
 struct RecordListView: View {
     @InjectedObservable(\.recordListViewModel) var viewModel
 
     var body: some View {
         VStack {
-            Picker("Filter", selection: $viewModel.selectedFilter) {
+            Picker(LocalizationKeys.RecordList.Filter.Picker.title, selection: $viewModel.selectedFilter) {
                 ForEach(FilterType.allCases, id: \.self) { filter in
                     Text(
                         [filter.colorText, filter.title].compactMap { $0 }.joined(separator: "\t")
@@ -34,7 +33,7 @@ struct RecordListView: View {
                 RecordRowView(record: record)
             }
         }
-        .navigationTitle("Activity Records")
+        .navigationTitle(LocalizationKeys.RecordList.Navigation.title)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .navigationBarTrailing) {
@@ -44,6 +43,7 @@ struct RecordListView: View {
                     }
                 } label: {
                     Image(systemName: "plus")
+                        .accessibilityLabel(LocalizationKeys.RecordList.Toolbar.Button.add)
                 }
             }
         }

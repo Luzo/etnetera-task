@@ -1,10 +1,3 @@
-//
-//  RecordAdd.swift
-//  Record
-//
-//  Created by Lubos Lehota on 28/07/2025.
-//
-
 import Factory
 import SwiftUI
 
@@ -14,14 +7,17 @@ struct AddRecordView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section("Record Details") {
-                    TextField("Activity Name", text: $viewModel.formInput.name)
+                Section(LocalizationKeys.AddRecord.RecordDetails.Section.title) {
+                    TextField(LocalizationKeys.AddRecord.ActivityName.Textfield.placeholder, text: $viewModel.formInput.name)
 
-                    TextField("Location", text: $viewModel.formInput.location)
+                    TextField(LocalizationKeys.AddRecord.Location.Textfield.placeholder, text: $viewModel.formInput.location)
                 }
 
-                Section("Storage") {
-                    Picker("Storage Type", selection: $viewModel.formInput.selectedStorageType) {
+                Section(LocalizationKeys.AddRecord.Storage.Section.title) {
+                    Picker(
+                        LocalizationKeys.AddRecord.StorageType.Picker.title,
+                        selection: $viewModel.formInput.selectedStorageType
+                    ) {
                         ForEach(StorageType.allCases, id: \.self) { type in
                             Text(type.title)
                                 .tag(type)
@@ -30,13 +26,16 @@ struct AddRecordView: View {
                     .pickerStyle(SegmentedPickerStyle())
                 }
 
-                Section("Duration") {
+                Section(LocalizationKeys.AddRecord.Duration.Section.title) {
                     HStack {
                         VStack {
-                            Text("Hours")
+                            Text(LocalizationKeys.AddRecord.Duration.Hours.label)
                                 .font(.caption)
                                 .foregroundColor(.secondary)
-                            Picker("Hours", selection: $viewModel.formInput.hours) {
+                            Picker(
+                                LocalizationKeys.AddRecord.Duration.Hours.label,
+                                selection: $viewModel.formInput.hours
+                            ) {
                                 ForEach(0..<24) { hour in
                                     Text("\(hour)").tag(hour)
                                 }
@@ -46,10 +45,13 @@ struct AddRecordView: View {
                         }
 
                         VStack {
-                            Text("Minutes")
+                            Text(LocalizationKeys.AddRecord.Duration.Minutes.label)
                                 .font(.caption)
                                 .foregroundColor(.secondary)
-                            Picker("Minutes", selection: $viewModel.formInput.minutes) {
+                            Picker(
+                                LocalizationKeys.AddRecord.Duration.Minutes.label,
+                                selection: $viewModel.formInput.minutes
+                            ) {
                                 ForEach(0..<60) { minute in
                                     Text("\(minute)").tag(minute)
                                 }
@@ -59,10 +61,13 @@ struct AddRecordView: View {
                         }
 
                         VStack {
-                            Text("Seconds")
+                            Text(LocalizationKeys.AddRecord.Duration.Seconds.label)
                                 .font(.caption)
                                 .foregroundColor(.secondary)
-                            Picker("Seconds", selection: $viewModel.formInput.seconds) {
+                            Picker(
+                                LocalizationKeys.AddRecord.Duration.Seconds.label,
+                                selection: $viewModel.formInput.seconds
+                            ) {
                                 ForEach(0..<60) { second in
                                     Text("\(second)").tag(second)
                                 }
@@ -79,14 +84,14 @@ struct AddRecordView: View {
                             await viewModel.saveRecord()
                         }
                     } label: {
-                        Text("Save Record")
+                        Text(LocalizationKeys.AddRecord.SaveRecord.Button.title)
                     }
                     .frame(maxWidth: .infinity)
                     .disabled(!viewModel.isFormValid)
                 }
             }
         }
-        .navigationTitle("Add Record")
+        .navigationTitle(LocalizationKeys.AddRecord.Navigation.title)
         .navigationBarTitleDisplayMode(.inline)
     }
 }

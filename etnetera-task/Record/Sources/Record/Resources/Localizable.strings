@@ -1,0 +1,32 @@
+/* 
+  Localizable.strings
+  Record
+
+  Created by Lubos Lehota on 29/07/2025.
+  
+*/
+
+"record.storageType.local" = "Local Storage";
+"record.storageType.remote" = "Remote Storage";
+
+"record.filterType.local" = "Local";
+"record.filterType.remote" = "Remote";
+"record.filterType.all" = "All";
+
+// NOTE: ADD RECORD
+"addRecord.recordDetails.section.title" = "Record Details";
+"addRecord.activityName.textfield.placeholder" = "Activity Name";
+"addRecord.location.textfield.placeholder" = "Location";
+"addRecord.storage.section.title" = "Storage";
+"addRecord.storageType.picker.title" = "Storage Type";
+"addRecord.duration.section.title" = "Duration";
+"addRecord.duration.hours.label" = "Hours";
+"addRecord.duration.minutes.label" = "Minutes";
+"addRecord.duration.seconds.label" = "Seconds";
+"addRecord.saveRecord.button.title" = "Save Record";
+"addRecord.navigation.title" = "Add Record";
+
+// NOTE: RECORD LIST
+"recordList.filter.picker.title" = "Filter";
+"recordList.navigation.title" = "Activity Records";
+"recordList.toolbar.button.add" = "Add Record";

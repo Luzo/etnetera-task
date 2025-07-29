@@ -31,16 +31,15 @@ extension FilterType {
     }
 }
 
-// TODO: Do localizations instead
 extension FilterType {
     var title: String {
         switch self {
         case .all:
-            return "All"
+            return LocalizationKeys.Record.FilterType.all
         case .local:
-            return "Local"
+            return LocalizationKeys.Record.FilterType.local
         case .remote:
-            return "Remote"
+            return LocalizationKeys.Record.FilterType.remote
         }
     }
 }
