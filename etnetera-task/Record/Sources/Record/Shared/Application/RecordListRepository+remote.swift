@@ -6,6 +6,7 @@
 //
 
 import Factory
+import Utils
 
 // TODO: add LocalRecordCache here to ease out on requests
 extension RecordListRepository {

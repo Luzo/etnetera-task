@@ -8,9 +8,9 @@
 import Factory
 import Foundation
 
-typealias UUIDGenerator = () -> UUID
+public typealias UUIDGenerator = () -> UUID
 
-extension Container {
+public extension Container {
     var uuidGenerator: Factory<UUIDGenerator> {
         Factory(self) {
             { UUID() }

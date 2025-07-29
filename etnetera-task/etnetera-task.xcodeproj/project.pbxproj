@@ -23,6 +23,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E820598F2E3910E5009FC07A /* Utils */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Utils; sourceTree = "<group>"; };
 		E8F860352E338CC400AB10DB /* etnetera-task.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "etnetera-task.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8F860422E338CC600AB10DB /* etnetera-taskTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "etnetera-taskTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8F8609D2E33A63600AB10DB /* Record */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Record; sourceTree = "<group>"; };
@@ -83,6 +84,7 @@
 		E8F8602C2E338CC400AB10DB = {
 			isa = PBXGroup;
 			children = (
+				E820598F2E3910E5009FC07A /* Utils */,
 				E8F8609D2E33A63600AB10DB /* Record */,
 				E8F860932E33A5D500AB10DB /* App */,
 				E8F860362E338CC400AB10DB /* Products */,
