@@ -8,17 +8,17 @@
 @testable import Record
 
 actor LocalRecordCacheMock: OnDeviceRecordService {
-    var records: [ActivityRecord] = []
+    var records: [SendableActivityRecordDTO] = []
 
-    init(records: [ActivityRecord] = []) {
+    init(records: [SendableActivityRecordDTO] = []) {
         self.records = records
     }
 
-    func loadRecords() async -> Result<[ActivityRecord], Never> {
+    func loadRecords() async -> Result<[SendableActivityRecordDTO], OnDeviceRecordServiceError> {
         .success(records)
     }
 
-    func saveRecord(_ record: ActivityRecord) async -> Result<Void, Never> {
+    func saveRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, OnDeviceRecordServiceError> {
         records.append(record)
         return .success(())
     }

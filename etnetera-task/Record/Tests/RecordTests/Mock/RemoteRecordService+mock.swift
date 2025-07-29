@@ -8,14 +8,14 @@
 @testable import Record
 
 struct RemoteRecordServiceStub: RemoteRecordService {
-    var loadRecords: Result<[Record.ActivityRecordDTO], Record.RemoteRecordServiceError> = .failure(.serverError)
-    var saveRecords: Result<Void, Record.RemoteRecordServiceError> = .failure(.serverError)
+    var loadRecords: Result<[SendableActivityRecordDTO], RemoteRecordServiceError> = .failure(.serverError)
+    var saveRecords: Result<Void, RemoteRecordServiceError> = .failure(.serverError)
 
-    func saveRecord(_ record: Record.ActivityRecordDTO) async -> Result<Void, Record.RemoteRecordServiceError> {
+    func saveRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, RemoteRecordServiceError> {
         saveRecords
     }
 
-    func loadRecords() async -> Result<[Record.ActivityRecordDTO], Record.RemoteRecordServiceError> {
+    func loadRecords() async -> Result<[SendableActivityRecordDTO], RemoteRecordServiceError> {
         loadRecords
     }
 }

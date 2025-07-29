@@ -6,10 +6,9 @@
 //
 
 protocol RecordService: Sendable {
-    associatedtype Record: Sendable
     associatedtype RecordServiceError: Error
 
     @discardableResult
-    func saveRecord(_ record: Record) async -> Result<Void, RecordServiceError>
-    func loadRecords() async -> Result<[Record], RecordServiceError>
+    func saveRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, RecordServiceError>
+    func loadRecords() async -> Result<[SendableActivityRecordDTO], RecordServiceError>
 }

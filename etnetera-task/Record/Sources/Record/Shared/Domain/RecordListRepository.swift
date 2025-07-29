@@ -14,5 +14,5 @@ struct RecordListRepository: Sendable {
 }
 
 enum RecordListRepositoryError: Error {
-    case serverError
+    case repositoryError
 }

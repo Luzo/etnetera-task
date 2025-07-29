@@ -42,9 +42,9 @@ extension RecordListRepository {
                     case (.success(let localRecords), .failure):
                         return .success(localRecords)
                     case (.failure, _):
-                        return .failure(.serverError)
+                        return .failure(.repositoryError)
                     case (_, .failure):
-                        return .failure(.serverError)
+                        return .failure(.repositoryError)
                     }
                 }
             }
@@ -56,8 +56,7 @@ extension Container {
     var gatewayRecordListRepository: Factory<RecordListRepository> {
         Factory(self) { RecordListRepository.gateway(
             localRepository: self.onDeviceRecordListRepository(
-                // TODO: replace with actual on device cache instead
-                onDeviceCache: self.localRecordCache(cache: [])()
+                onDeviceCache: self.swiftDataService()
             )(),
             remoteRepository: self.remoteRecordListRepository(
                 recordService: self.firestoreRecordService()

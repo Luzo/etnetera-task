@@ -20,21 +20,21 @@ struct ActivityRecordConverterTests {
     @Test(
         arguments: [
             (
-                ActivityRecordDTO.mock(),
+                SendableActivityRecordDTO.mock(),
                 Result<ActivityRecord, ActivityRecordConverterError>.success(.mock(storageType: .remote))
             ),
             (
-                ActivityRecordDTO.mock(id: "a"),
+                SendableActivityRecordDTO.mock(id: "a"),
                 Result<ActivityRecord, ActivityRecordConverterError>.failure(.conversionError)
             )
         ]
     )
     func sut_should_convert_from_domain_or_fail_or_return_conversion_error(
-        dtoToConvert: ActivityRecordDTO,
+        dtoToConvert: SendableActivityRecordDTO,
         expectedResult: Result<ActivityRecord, ActivityRecordConverterError>
     ) {
         let sut = ActivityRecordConverter.live
-        let converted = sut.toDomain(dtoToConvert)
+        let converted = sut.toDomain(.remote, dtoToConvert)
         #expect(converted == expectedResult)
     }
 }

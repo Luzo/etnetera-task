@@ -12,12 +12,12 @@ extension RecordListRepository {
         saveRecord: @Sendable @escaping (
             _ record: ActivityRecord
         ) async -> Result<Void, RecordListRepositoryError> = { _ in
-            .failure(.serverError)
+            .failure(.repositoryError)
         },
         loadRecords: @Sendable @escaping (
             _ filter: FilterType
         ) async -> Result<[ActivityRecord], RecordListRepositoryError> = { _ in
-            .failure(.serverError)
+            .failure(.repositoryError)
         }
     ) -> Self {
         .init(saveRecord: saveRecord, loadRecords: loadRecords)

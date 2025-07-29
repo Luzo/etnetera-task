@@ -5,27 +5,28 @@
 //  Created by Lubos Lehota on 27/07/2025.
 //
 
+import Foundation
 import Factory
 
 actor LocalRecordCache: OnDeviceRecordService {
-    var cache: [ActivityRecord] = []
+    var cache: [SendableActivityRecordDTO] = []
 
-    init(cache: [ActivityRecord] = []) {
+    init(cache: [SendableActivityRecordDTO] = []) {
         self.cache = cache
     }
 
-    func loadRecords() async -> Result<[ActivityRecord], Never> {
+    func loadRecords() async -> Result<[SendableActivityRecordDTO], OnDeviceRecordServiceError> {
         .success(cache)
     }
 
-    func saveRecord(_ record: ActivityRecord) async -> Result<Void, Never> {
+    func saveRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, OnDeviceRecordServiceError> {
         cache.append(record)
         return .success(())
     }
 }
 
 extension Container {
-    func localRecordCache(cache: [ActivityRecord]) -> Factory<some OnDeviceRecordService> {
+    func localRecordCache(cache: [SendableActivityRecordDTO]) -> Factory<some OnDeviceRecordService> {
         Factory(self) { LocalRecordCache(cache: cache) }
             .singleton
     }
