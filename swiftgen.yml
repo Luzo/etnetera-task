@@ -1,0 +1,8 @@
+strings:
+  - inputs: [etnetera-task/Record/Sources/Record/Resources/Localizable.strings]
+    outputs:
+      - templateName: structured-swift5
+        output: etnetera-task/Record/Sources/Record/Generated/LocalizationKeys.swift
+        params:
+          enumName: LocalizationKeys
+          publicAccess: false

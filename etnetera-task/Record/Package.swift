@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Record",
+    defaultLocalization: "en",
     platforms: [
         .iOS(.v17),
     ],
@@ -29,6 +30,9 @@ let package = Package(
             dependencies: [
                 .product(name: "Factory", package: "Factory"),
                 .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
+            ],
+            resources: [
+                .process("Resources")
             ]
         ),
         .testTarget(

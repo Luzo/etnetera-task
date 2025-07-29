@@ -10,9 +10,9 @@ extension StorageType {
     var title: String {
         switch self {
         case .local:
-            return "Local"
+            return LocalizationKeys.Record.StorageType.local
         case .remote:
-            return "Remote"
+            return LocalizationKeys.Record.StorageType.remote
         }
     }
 }
