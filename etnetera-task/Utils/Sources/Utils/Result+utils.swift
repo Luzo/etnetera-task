@@ -5,8 +5,7 @@
 //  Created by Lubos Lehota on 27/07/2025.
 //
 
-// TODO: move to separate package and test
-extension Result {
+public extension Result {
     var successOrNil: Success? {
         switch self {
         case let .success(result):
