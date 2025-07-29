@@ -12,7 +12,7 @@ import Testing
 struct LocalRecordCacheTests {
     @Test
     func sut_should_load_records() async {
-        let expectedRecords: [ActivityRecord] = [.mock()]
+        let expectedRecords: [SendableActivityRecordDTO] = [.mock()]
         let sut = LocalRecordCache(cache: expectedRecords)
 
         let result = await sut.loadRecords()
@@ -21,7 +21,7 @@ struct LocalRecordCacheTests {
 
     @Test
     func sut_should_save_record() async {
-        let expectedRecord: ActivityRecord = .mock()
+        let expectedRecord: SendableActivityRecordDTO = .mock()
         let sut = LocalRecordCache()
 
         let result = await sut.saveRecord(expectedRecord)

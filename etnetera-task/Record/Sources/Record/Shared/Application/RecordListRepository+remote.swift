@@ -28,7 +28,7 @@ extension RecordListRepository {
                     return .failure(error.asRecordListRepositoryError)
                 }
 
-                let converted = (recordsResult.successOrNil ?? []).map { converter.toDomain($0) }
+                let converted = (recordsResult.successOrNil ?? []).map { converter.toDomain(.remote, $0) }
                 let successes = converted.compactMap(\.successOrNil)
                 let errors = converted.compactMap(\.failureOrNil)
 
@@ -59,7 +59,7 @@ private extension RemoteRecordServiceError {
     var asRecordListRepositoryError: RecordListRepositoryError {
         switch self {
         case .serverError:
-            return .serverError
+            return .repositoryError
         }
     }
 }

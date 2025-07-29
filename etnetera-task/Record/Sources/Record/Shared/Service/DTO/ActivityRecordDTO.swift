@@ -8,7 +8,16 @@
 import Factory
 import Foundation
 
-struct ActivityRecordDTO: Codable, Equatable {
+protocol ActivityRecordDTO: Equatable {
+    var id: String { get }
+    var name: String { get }
+    var location: String { get }
+    var duration: Double { get }
+
+    init(id: String, name: String, location: String, duration: Double)
+}
+
+struct SendableActivityRecordDTO: ActivityRecordDTO, Sendable {
     let id: String
     let name: String
     let location: String
@@ -20,32 +29,32 @@ enum ActivityRecordConverterError: Error {
 }
 
 struct ActivityRecordConverter: Sendable {
-    var fromDomain: @Sendable (ActivityRecord) -> ActivityRecordDTO
-    var toDomain: @Sendable (ActivityRecordDTO) -> Result<ActivityRecord, ActivityRecordConverterError>
+    var fromDomain: @Sendable (ActivityRecord) -> SendableActivityRecordDTO
+    var toDomain: @Sendable (StorageType, SendableActivityRecordDTO) -> Result<ActivityRecord, ActivityRecordConverterError>
 }
 
 extension ActivityRecordConverter {
     static var live: ActivityRecordConverter {
         .init(
             fromDomain: {
-                ActivityRecordDTO(
+                SendableActivityRecordDTO(
                     id: $0.id.uuidString,
                     name: $0.name,
                     location: $0.location,
                     duration: $0.duration
                 )
             },
-            toDomain: {
-                guard let uuid = UUID(uuidString: $0.id) else {
+            toDomain: { storageType, record in
+                guard let uuid = UUID(uuidString: record.id) else {
                     return .failure(.conversionError)
                 }
 
                 return .success(ActivityRecord(
                     id: uuid,
-                    name: $0.name,
-                    location: $0.location,
-                    duration: $0.duration,
-                    storageType: .remote
+                    name: record.name,
+                    location: record.location,
+                    duration: record.duration,
+                    storageType: storageType
                 ))
             }
         )

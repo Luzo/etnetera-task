@@ -8,36 +8,35 @@
 import Factory
 import FirebaseFirestore
 
-actor FirestoreRecordService: RemoteRecordService{
+actor FirestoreRecordService: RemoteRecordService {
+    @Injected(\.activityRecordFirestoreConverter) var converter
+    @Injected(\.userIDService) var userIDService
     private lazy var db = Firestore.firestore()
-    // TODO: inject from some safe storage upon load
-    private let userID: String = "B0nXqrMe7hfndefayv86"
 
-    func loadRecords() async -> Result<[ActivityRecordDTO], RemoteRecordServiceError> {
-        do {
-            let snapshot = try await db.collection("users")
-                .document(userID)
-                .collection("records")
-                .getDocuments()
+    func loadRecords() async -> Result<[SendableActivityRecordDTO], RemoteRecordServiceError> {
+        let snapshot = try? await db.collection("users")
+            .document(userIDService.userID)
+            .collection("records")
+            .getDocuments()
 
-            let fetchedRecords = snapshot.documents.compactMap { doc in
-                try? doc.data(as: ActivityRecordDTO.self)
-            }
+        guard let snapshot else { return .failure(.serverError) }
 
-            return .success(fetchedRecords)
-        } catch {
-            return .failure(.serverError)
-        }
+        let fetchedRecords = snapshot.documents
+            .compactMap { doc in try? doc.data(as: ActivityRecordFirestoreDTO.self) }
+            .map(converter.toDomain)
+
+        return .success(fetchedRecords)
+
     }
 
-    func saveRecord(_ record: ActivityRecordDTO) async -> Result<Void, RemoteRecordServiceError> {
+    func saveRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, RemoteRecordServiceError> {
         do {
-            let collection = db.collection("users")
-                .document(userID)
+            let collection = await db.collection("users")
+                .document(userIDService.userID)
                 .collection("records")
 
             let id = record.id
-            try collection.document(id).setData(from: record)
+            try collection.document(id).setData(from: converter.fromDomain(record))
 
             return .success(())
         } catch {
