@@ -17,8 +17,15 @@ class RecordAddViewModel {
     @Injected(\.recordCoordinator) private var coordinator
     @ObservationIgnored
     @Injected(\.uuidGenerator) private var uuidGenerator
+    @ObservationIgnored
+    @Injected(\.clock) private var clock
+
+    @ObservationIgnored
+    var savingTask: Task<Void, Never>?
 
     var formInput: FormInput = .defaultValues
+    var isLoading: Bool = false
+    var errorMessage: String?
 }
 
 extension RecordAddViewModel {
@@ -26,27 +33,49 @@ extension RecordAddViewModel {
 
     @MainActor
     func saveRecord() async {
-        guard isFormValid else {
-            // TODO: show some message
-            return
+        savingTask = Task {
+            guard !isLoading else { return }
+            defer { isLoading = false }
+            isLoading = true
+
+            guard isFormValid else {
+                showDisappearingError(withMessage: LocalizationKeys.AddRecord.Error.validation)
+                return
+            }
+
+
+            let duration = TimeInterval(formInput.hours * 3600 + formInput.minutes * 60 + formInput.seconds)
+            let record = ActivityRecord(
+                id: uuidGenerator(),
+                name: formInput.name.trimmingCharacters(in: .whitespacesAndNewlines),
+                location: formInput.location.trimmingCharacters(in: .whitespacesAndNewlines),
+                duration: duration,
+                storageType: formInput.selectedStorageType
+            )
+
+            if Task.isCancelled { return }
+            let results = await recordsRepository.saveRecord(record)
+            if Task.isCancelled { return }
+
+            switch results {
+            case .success:
+                coordinator.pop()
+            case .failure:
+                showDisappearingError(withMessage: LocalizationKeys.AddRecord.Error.server)
+                break
+            }
         }
+    }
 
-        let duration = TimeInterval(formInput.hours * 3600 + formInput.minutes * 60 + formInput.seconds)
-        let record = ActivityRecord(
-            id: uuidGenerator(),
-            name: formInput.name.trimmingCharacters(in: .whitespacesAndNewlines),
-            location: formInput.location.trimmingCharacters(in: .whitespacesAndNewlines),
-            duration: duration,
-            storageType: formInput.selectedStorageType
-        )
+    func onDisappear() async {
+        savingTask?.cancel()
+    }
 
-
-        switch await recordsRepository.saveRecord(record) {
-        case .success:
-            coordinator.pop()
-        case .failure:
-            // TODO: show some message on error
-            break
+    private func showDisappearingError(withMessage message: String) {
+        Task {
+            errorMessage = message
+            try? await clock.sleep(for: .seconds(2))
+            errorMessage = nil
         }
     }
 }

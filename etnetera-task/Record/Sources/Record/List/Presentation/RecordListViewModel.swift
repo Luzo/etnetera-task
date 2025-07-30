@@ -16,7 +16,7 @@ enum FilterType: CaseIterable {
 }
 
 struct FormattedActivityRecord: Identifiable, Equatable {
-    let id: UUID
+    let id: String
     let name: String
     let location: String
     let duration: String
@@ -32,12 +32,16 @@ class RecordListViewModel {
     @Injected(\.activityDurationFormatter) private var durationFormatter
     @ObservationIgnored
     @Injected(\.recordCoordinator) private var coordinator
+    @ObservationIgnored
+    @Injected(\.clock) private var clock
 
     @ObservationIgnored
     var loadedRecords: [ActivityRecord] = []
 
     var records: [FormattedActivityRecord] = []
     var selectedFilter: FilterType = .all
+    var isLoading: Bool = false
+    var errorMessage: String?
 }
 
 extension RecordListViewModel {
@@ -67,7 +71,7 @@ private extension RecordListViewModel {
             }
             .map {
             .init(
-                id: $0.id,
+                id: $0.id.uuidString,
                 name: $0.name,
                 location: $0.location,
                 duration: durationFormatter.formattedDuration($0.duration),
@@ -77,21 +81,32 @@ private extension RecordListViewModel {
     }
 
     private func loadRecords() async {
+        isLoading = true
+
         // TODO: check connection for remote
         let result = await recordsRepository.loadRecords(selectedFilter)
-        loadedRecords.removeAll {
-            selectedFilter.acceptedStorageTypes.contains($0.storageType)
-        }
+        try? await clock.sleep(for: .seconds(0.3))
 
         switch result {
         case let .success(records):
+            loadedRecords.removeAll {
+                selectedFilter.acceptedStorageTypes.contains($0.storageType)
+            }
             loadedRecords.append(contentsOf: records)
         case .failure:
-            // TODO: ???
-            break
+            showDisappearingError(withMessage: LocalizationKeys.RecordList.error)
         }
 
         setRecordsForFilters(filter: selectedFilter)
+        isLoading = false
+    }
+
+    private func showDisappearingError(withMessage message: String) {
+        Task {
+            errorMessage = message
+            try? await clock.sleep(for: .seconds(2))
+            errorMessage = nil
+        }
     }
 }
 
@@ -114,16 +129,5 @@ extension Container {
             RecordListViewModel()
         }
         .unique
-    }
-}
-
-// TODO: move to tests when implemented
-extension ActivityRecord {
-    static var mocks: [Self] {
-        [
-            .init(id: UUID(uuidString: "1bbb9689-d2e6-484b-9828-f43b5c523ff0")!, name: "Running", location: "Park", duration: 120, storageType: .local),
-            .init(id: UUID(uuidString: "2bbb9689-d2e6-484b-9828-f43b5c523ff0")!, name: "Jumping", location: "Park", duration: 120, storageType: .local),
-            .init(id: UUID(uuidString: "3bbb9689-d2e6-484b-9828-f43b5c523ff0")!, name: "Strength", location: "Park", duration: 120, storageType: .remote),
-        ]
     }
 }

@@ -29,9 +29,10 @@ struct RecordListView: View {
                 }
             }
 
-            List(viewModel.records) { record in
-                RecordRowView(record: record)
-            }
+            ListContentView(
+                isLoading: viewModel.isLoading,
+                records: viewModel.isLoading ? FormattedActivityRecord.placeholders : viewModel.records
+            )
         }
         .navigationTitle(LocalizationKeys.RecordList.Navigation.title)
         .navigationBarTitleDisplayMode(.inline)
@@ -48,10 +49,40 @@ struct RecordListView: View {
             }
         }
         .refreshable {
-            await viewModel.onRefresh()
+            await Task {
+                await viewModel.onRefresh()
+            }.value
         }
         .task {
             await viewModel.onTask()
+        }
+        .overlay(
+            Group {
+                if let message = viewModel.errorMessage {
+                    VStack {
+                        Spacer()
+                        SnackbarView(message: message)
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                    }
+                    .padding(.horizontal)
+                    .animation(.easeInOut(duration: 0.3), value: viewModel.errorMessage)
+                }
+            }
+        )
+    }
+}
+
+
+private extension FormattedActivityRecord {
+    static var placeholders: [FormattedActivityRecord] {
+        (0..<3).map { id in
+            FormattedActivityRecord(
+                id: "\(id)",
+                name: "Lorem ipsum",
+                location: "Lorem ipsum dolor sit amet",
+                duration: "0:01",
+                storageType: .local
+            )
         }
     }
 }

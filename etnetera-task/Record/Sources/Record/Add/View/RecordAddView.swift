@@ -84,14 +84,36 @@ struct AddRecordView: View {
                             await viewModel.saveRecord()
                         }
                     } label: {
-                        Text(LocalizationKeys.AddRecord.SaveRecord.Button.title)
+                        if viewModel.isLoading {
+                            ProgressView()
+                        } else {
+                            Text(LocalizationKeys.AddRecord.SaveRecord.Button.title)
+                        }
                     }
                     .frame(maxWidth: .infinity)
-                    .disabled(!viewModel.isFormValid)
+                    .disabled(!viewModel.isFormValid || viewModel.isLoading)
                 }
             }
         }
         .navigationTitle(LocalizationKeys.AddRecord.Navigation.title)
         .navigationBarTitleDisplayMode(.inline)
+        .onDisappear {
+            Task {
+                await viewModel.onDisappear()
+            }
+        }
+        .overlay(
+            Group {
+                if let message = viewModel.errorMessage {
+                    VStack {
+                        Spacer()
+                        SnackbarView(message: message)
+                            .transition(.move(edge: .bottom).combined(with: .opacity))
+                    }
+                    .padding(.horizontal)
+                    .animation(.easeInOut(duration: 0.3), value: viewModel.errorMessage)
+                }
+            }
+        )
     }
 }

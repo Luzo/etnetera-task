@@ -35,6 +35,12 @@ internal enum LocalizationKeys {
         internal static let title = LocalizationKeys.tr("Localizable", "addRecord.duration.section.title", fallback: "Duration")
       }
     }
+    internal enum Error {
+      /// Error ocurred try to save again
+      internal static let server = LocalizationKeys.tr("Localizable", "addRecord.error.server", fallback: "Error ocurred try to save again")
+      /// Some fields are invalid or left unfilled
+      internal static let validation = LocalizationKeys.tr("Localizable", "addRecord.error.validation", fallback: "Some fields are invalid or left unfilled")
+    }
     internal enum Location {
       internal enum Textfield {
         /// Location
@@ -90,6 +96,10 @@ internal enum LocalizationKeys {
     }
   }
   internal enum RecordList {
+    /// Error ocurred try to reload
+    internal static let error = LocalizationKeys.tr("Localizable", "recordList.error", fallback: "Error ocurred try to reload")
+    /// Loading records...
+    internal static let loading = LocalizationKeys.tr("Localizable", "recordList.loading", fallback: "Loading records...")
     internal enum Filter {
       internal enum Picker {
         /// Filter
@@ -99,6 +109,16 @@ internal enum LocalizationKeys {
     internal enum Navigation {
       /// Activity Records
       internal static let title = LocalizationKeys.tr("Localizable", "recordList.navigation.title", fallback: "Activity Records")
+    }
+    internal enum No {
+      internal enum Network {
+        /// It appears that you are disconnected.
+        internal static let error = LocalizationKeys.tr("Localizable", "recordList.no.network.error", fallback: "It appears that you are disconnected.")
+      }
+      internal enum Records {
+        /// No records found
+        internal static let found = LocalizationKeys.tr("Localizable", "recordList.no.records.found", fallback: "No records found")
+      }
     }
     internal enum Toolbar {
       internal enum Button {
