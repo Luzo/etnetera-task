@@ -31,7 +31,12 @@ struct RecordListView: View {
 
             ListContentView(
                 isLoading: viewModel.isLoading,
-                records: viewModel.isLoading ? FormattedActivityRecord.placeholders : viewModel.records
+                records: viewModel.isLoading ? FormattedActivityRecord.placeholders : viewModel.records,
+                deleteAction: { record in
+                    Task {
+                        await viewModel.onDeleteTapped(recordID: record.id)
+                    }
+                },
             )
         }
         .navigationTitle(LocalizationKeys.RecordList.Navigation.title)

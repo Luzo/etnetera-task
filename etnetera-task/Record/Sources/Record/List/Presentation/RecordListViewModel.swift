@@ -38,6 +38,9 @@ class RecordListViewModel {
     @ObservationIgnored
     var loadedRecords: [ActivityRecord] = []
 
+    @ObservationIgnored
+    var loadedTypes: [StorageType] = []
+
     var records: [FormattedActivityRecord] = []
     var selectedFilter: FilterType = .all
     var isLoading: Bool = false
@@ -46,6 +49,7 @@ class RecordListViewModel {
 
 extension RecordListViewModel {
     func onTask() async {
+        loadedTypes = []
         await loadRecords()
     }
 
@@ -55,10 +59,26 @@ extension RecordListViewModel {
 
     func filterChanged() async {
         setRecordsForFilters(filter: selectedFilter)
+        if !selectedFilter.acceptedStorageTypes.allSatisfy(loadedTypes.contains) {
+            await onRefresh()
+        }
     }
 
     func onAddTapped() async {
         coordinator.navigate(to: .addRecord)
+    }
+
+    func onDeleteTapped(recordID: FormattedActivityRecord.ID) async {
+        guard let recordToDelete = loadedRecords.first(where: { $0.id.uuidString == recordID}) else {
+            return
+        }
+
+        switch await recordsRepository.deleteRecord(recordToDelete) {
+        case .success:
+            break
+        case .failure:
+            await onRefresh()
+        }
     }
 }
 
@@ -93,6 +113,7 @@ private extension RecordListViewModel {
                 selectedFilter.acceptedStorageTypes.contains($0.storageType)
             }
             loadedRecords.append(contentsOf: records)
+            loadedTypes.append(contentsOf: selectedFilter.acceptedStorageTypes)
         case .failure:
             showDisappearingError(withMessage: LocalizationKeys.RecordList.error)
         }

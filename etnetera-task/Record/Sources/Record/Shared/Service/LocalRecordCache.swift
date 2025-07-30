@@ -23,6 +23,11 @@ actor LocalRecordCache: OnDeviceRecordService {
         cache.append(record)
         return .success(())
     }
+
+    func deleteRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, OnDeviceRecordServiceError> {
+        cache.removeAll(where: { $0.id == record.id })
+        return .success(())
+    }
 }
 
 extension Container {

@@ -39,7 +39,6 @@ struct RecordRowView: View {
 
             VStack {
                 Text(record.storageType.colorText)
-
             }
         }
         .padding(.vertical, 4)

@@ -11,6 +11,7 @@
 struct RecordListRepository: Sendable {
     var saveRecord: @Sendable (_ record: ActivityRecord) async -> Result<Void, RecordListRepositoryError>
     var loadRecords: @Sendable (_ filter: FilterType) async -> Result<[ActivityRecord], RecordListRepositoryError>
+    var deleteRecord: @Sendable (_ record: ActivityRecord) async -> Result<Void, RecordListRepositoryError>
 }
 
 enum RecordListRepositoryError: Error {

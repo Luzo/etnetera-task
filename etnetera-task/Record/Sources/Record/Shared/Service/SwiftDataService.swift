@@ -17,19 +17,8 @@ actor SwiftDataService: OnDeviceRecordService {
     func loadRecords() async -> Result<[SendableActivityRecordDTO], OnDeviceRecordServiceError> {
         let context = ModelContext(container)
 
-        guard let user = await fetchUser(withID: userIDService.userID, in: context) else {
-            return .success([])
-        }
-
-        guard let records = try? context.fetch(FetchDescriptor<ActivityRecordSwiftDataDTO>()) else {
-            return .failure(.serviceError)
-        }
-
-        return .success(
-            records
-                .filter { $0.user == user }
-                .map(converter.toDomain)
-        )
+        return await loadSwiftDataRecords(in: context)
+            .mapSuccess { [converter] in $0.map(converter.toDomain) }
     }
 
     func saveRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, OnDeviceRecordServiceError> {
@@ -44,6 +33,26 @@ actor SwiftDataService: OnDeviceRecordService {
         } catch {
             return .failure(.serviceError)
         }
+    }
+
+    func deleteRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, OnDeviceRecordServiceError> {
+        let context = ModelContext(container)
+
+        guard
+            let records = await loadSwiftDataRecords(in: context).successOrNil,
+            let recordToRemove = records.first(where: { $0.id == record.id })
+        else {
+            return .failure(.serviceError)
+        }
+        context.delete(recordToRemove)
+
+        do {
+            try context.save()
+        } catch {
+            return .failure(.serviceError)
+        }
+
+        return .success(())
     }
 }
 
@@ -66,6 +75,21 @@ extension SwiftDataService {
         )
 
         return try? context.fetch(descriptor).first
+    }
+
+    func loadSwiftDataRecords(in context: ModelContext) async -> Result<[ActivityRecordSwiftDataDTO], OnDeviceRecordServiceError> {
+        guard let user = await fetchUser(withID: userIDService.userID, in: context) else {
+            return .success([])
+        }
+
+        guard let records = try? context.fetch(FetchDescriptor<ActivityRecordSwiftDataDTO>()) else {
+            return .failure(.serviceError)
+        }
+
+        return .success(
+            records
+                .filter { $0.user == user }
+        )
     }
 }
 
