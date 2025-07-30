@@ -18,8 +18,13 @@ extension RecordListRepository {
             _ filter: FilterType
         ) async -> Result<[ActivityRecord], RecordListRepositoryError> = { _ in
             .failure(.repositoryError)
+        },
+        deleteRecord: @Sendable @escaping (
+            _ record: ActivityRecord
+        ) async -> Result<Void, RecordListRepositoryError> = { _ in
+            .failure(.repositoryError)
         }
     ) -> Self {
-        .init(saveRecord: saveRecord, loadRecords: loadRecords)
+        .init(saveRecord: saveRecord, loadRecords: loadRecords, deleteRecord: deleteRecord)
     }
 }

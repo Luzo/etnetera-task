@@ -11,6 +11,15 @@ struct ListContentView: View {
     var isLoading: Bool
     var records: [FormattedActivityRecord]
 
+    var deleteAction: (FormattedActivityRecord) -> Void
+
+
+    init(isLoading: Bool, records: [FormattedActivityRecord], deleteAction: @escaping (FormattedActivityRecord) -> Void) {
+        self.isLoading = isLoading
+        self.records = records
+        self.deleteAction = deleteAction
+    }
+
     var body: some View {
         ZStack {
             Color(.systemGroupedBackground)
@@ -36,9 +45,15 @@ struct ListContentView: View {
             } else {
                 List(records) { record in
                     RecordRowView(record: record)
+                        .swipeActions(edge: .trailing) {
+                            Button(role: .destructive) {
+                                deleteAction(record)
+                            } label: {
+                                Label("Delete", systemImage: "trash")
+                            }
+                        }
                 }
                 .redacted(reason: isLoading ? .placeholder : [])
-
             }
         }
     }

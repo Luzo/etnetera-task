@@ -38,6 +38,10 @@ extension RecordListRepository {
                 }
 
                 return .success(successes)
+            },
+            deleteRecord: { record in
+                await recordService.deleteRecord(converter.fromDomain(record))
+                    .mapError(\.asRecordListRepositoryError)
             }
         )
     }

@@ -22,5 +22,10 @@ actor LocalRecordCacheMock: OnDeviceRecordService {
         records.append(record)
         return .success(())
     }
+
+    func deleteRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, OnDeviceRecordServiceError> {
+        records.removeAll(where: { $0.id == record.id })
+        return .success(())
+    }
 }
 

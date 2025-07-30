@@ -17,7 +17,7 @@ protocol ActivityRecordDTO: Equatable {
     init(id: String, name: String, location: String, duration: Double)
 }
 
-struct SendableActivityRecordDTO: ActivityRecordDTO, Sendable {
+struct SendableActivityRecordDTO: ActivityRecordDTO, Sendable, Identifiable {
     let id: String
     let name: String
     let location: String

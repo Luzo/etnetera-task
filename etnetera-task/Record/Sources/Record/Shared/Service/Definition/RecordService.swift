@@ -11,4 +11,6 @@ protocol RecordService: Sendable {
     @discardableResult
     func saveRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, RecordServiceError>
     func loadRecords() async -> Result<[SendableActivityRecordDTO], RecordServiceError>
+    @discardableResult
+    func deleteRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, RecordServiceError>
 }

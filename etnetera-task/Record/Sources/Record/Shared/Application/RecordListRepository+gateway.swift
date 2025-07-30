@@ -47,6 +47,14 @@ extension RecordListRepository {
                         return .failure(.repositoryError)
                     }
                 }
+            },
+            deleteRecord: { record in
+                switch record.storageType {
+                case .local:
+                    return await localRepository.deleteRecord(record)
+                case .remote:
+                    return await remoteRepository.deleteRecord(record)
+                }
             }
         )
     }

@@ -34,4 +34,15 @@ public extension Result {
             return .failure(mappingError(error))
         }
     }
+
+    func mapSuccess<NewSuccessType>(
+        _ mappingSuccess: @escaping (Success) -> NewSuccessType
+    ) -> Result<NewSuccessType, Failure> {
+        switch self {
+        case let .success(result):
+            return .success(mappingSuccess(result))
+        case let .failure(error):
+            return .failure(error)
+        }
+    }
 }

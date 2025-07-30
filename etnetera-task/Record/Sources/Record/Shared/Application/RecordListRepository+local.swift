@@ -17,11 +17,11 @@ extension RecordListRepository {
         return .init(
             saveRecord: { record in
                 await onDeviceCache.saveRecord(converter.fromDomain(record))
-                return .success(())
+                    .mapError(\.asRecordListRepositoryError)
             },
             loadRecords: { _ in
                 let recordsResult = await onDeviceCache.loadRecords()
-                if let error = recordsResult.failureOrNil {
+                if let _ = recordsResult.failureOrNil {
                     return .failure(.repositoryError)
                 }
 
@@ -29,11 +29,15 @@ extension RecordListRepository {
                 let successes = converted.compactMap(\.successOrNil)
                 let errors = converted.compactMap(\.failureOrNil)
 
-                if successes.isEmpty, let firstError = errors.first {
+                if successes.isEmpty, let _ = errors.first {
                     return .failure(.repositoryError)
                 }
 
                 return .success(successes)
+            },
+            deleteRecord: { record in
+                await onDeviceCache.deleteRecord(converter.fromDomain(record))
+                    .mapError(\.asRecordListRepositoryError)
             }
         )
     }
@@ -45,5 +49,14 @@ extension Container {
             onDeviceCache: onDeviceCache,
             converter: self.activityRecordConverter()
         )}
+    }
+}
+
+private extension OnDeviceRecordServiceError {
+    var asRecordListRepositoryError: RecordListRepositoryError {
+        switch self {
+        case .serviceError:
+            return .repositoryError
+        }
     }
 }

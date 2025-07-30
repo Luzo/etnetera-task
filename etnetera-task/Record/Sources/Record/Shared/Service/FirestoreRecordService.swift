@@ -31,17 +31,34 @@ actor FirestoreRecordService: RemoteRecordService {
 
     func saveRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, RemoteRecordServiceError> {
         do {
-            let collection = await db.collection("users")
-                .document(userIDService.userID)
-                .collection("records")
-
             let id = record.id
-            try collection.document(id).setData(from: converter.fromDomain(record))
+            try await getRecordsCollection()
+                .document(id)
+                .setData(from: converter.fromDomain(record))
 
             return .success(())
         } catch {
             return .failure(.serverError)
         }
+    }
+
+    func deleteRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, RemoteRecordServiceError> {
+        do {
+            let id = record.id
+            try await getRecordsCollection().document(id).delete()
+
+            return .success(())
+        } catch {
+            return .failure(.serverError)
+        }
+    }
+}
+
+private extension FirestoreRecordService {
+    func getRecordsCollection() async throws -> CollectionReference {
+        return await db.collection("users")
+            .document(userIDService.userID)
+            .collection("records")
     }
 }
 

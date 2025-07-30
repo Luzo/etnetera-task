@@ -10,6 +10,7 @@
 struct RemoteRecordServiceStub: RemoteRecordService {
     var loadRecords: Result<[SendableActivityRecordDTO], RemoteRecordServiceError> = .failure(.serverError)
     var saveRecords: Result<Void, RemoteRecordServiceError> = .failure(.serverError)
+    var deleteRecord: Result<Void, RemoteRecordServiceError> = .failure(.serverError)
 
     func saveRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, RemoteRecordServiceError> {
         saveRecords
@@ -17,5 +18,9 @@ struct RemoteRecordServiceStub: RemoteRecordService {
 
     func loadRecords() async -> Result<[SendableActivityRecordDTO], RemoteRecordServiceError> {
         loadRecords
+    }
+
+    func deleteRecord(_ record: SendableActivityRecordDTO) async -> Result<Void, RemoteRecordServiceError> {
+        deleteRecord
     }
 }

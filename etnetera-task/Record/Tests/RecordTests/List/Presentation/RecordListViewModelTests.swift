@@ -67,6 +67,7 @@ private struct RecordListViewModelTests {
         expectedFormattedModels: [FormattedActivityRecord]
     ) async throws {
         let sut = RecordListViewModel()
+        await sut._setLoadedTypes([.local, .remote])
         await sut._setFilter(selectedFilter)
 
         #expect(sut.loadedRecords.isEmpty)
@@ -121,6 +122,22 @@ private struct RecordListViewModelTests {
         await clock.advance(by: .seconds(2))
         #expect(sut.errorMessage == nil)
     }
+
+    @Test
+    @MainActor
+    func sut_should_remove_record() async throws {
+        await confirmation { confirmation in
+            Container.shared.gatewayRecordListRepository.register {
+                .mock(deleteRecord: { _ in
+                    confirmation.confirm()
+                    return .success(()) }
+                )
+            }
+            let sut = RecordListViewModel()
+            sut.loadedRecords = ActivityRecord.mocks
+            await sut.onDeleteTapped(recordID: sut.loadedRecords[0].id.uuidString)
+        }
+    }
 }
 
 private extension RecordListViewModel {
@@ -130,6 +147,10 @@ private extension RecordListViewModel {
 
     func _setLoadedRecords(_ records: [ActivityRecord]) async {
         loadedRecords = records
+    }
+
+    func _setLoadedTypes(_ types: [StorageType]) async {
+        loadedTypes = types
     }
 }
 
