@@ -20,7 +20,7 @@ actor TestClock: SchedulingClock {
 
     func advance(by duration: Duration) async {
         // NOTE: this is here to give scheduler time to schedule Task
-        try? await Task.sleep(for: .microseconds(100))
+        try? await Task.sleep(for: .microseconds(500))
 
         now += duration
         let ready = sleepers.filter { $0.resumeAt <= now }
