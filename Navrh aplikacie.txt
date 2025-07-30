@@ -1,0 +1,29 @@
+Navrh aplikacie:
+
+Prehlad - pociatocna obrazovka
+- uzivatel zacina na liste aby rovno videl prehlad, kde su mu okamzite stiahnute zaznamy
+- pri prekliku medzi tabmi je spusteny refresh, ak dany tab nebol dotiahnuty - riesi synchronizaciu - bolo by mozne ju riesit aj cache mechanizmom ale ma to nevyhody, ze to nie je stopercentny source of truth
+- pri loadovani sa pouziva redacted styl, zamedzuje inkonzistenciam
+- ak nastane chyba, je zobrazena v snackbare, ktory automaticky mizne
+- sleduje sa dostupnost internetu
+- je moznost odstranovat itemy pomocou swipe gesta
+
+Obrazovka pridania
+- dostupna z obrazovky Prehlad cez vizualne nerusive tlacitko "plus"
+- tlacitko ulozit je aktivne len ak je formular vyplneny validne
+
+Zvolene technologie:
+- ako demonstraciu pouzivam oba styly aj interfacy definovane protokolmi aj protocol witness
+- pre lokalnu databazu som zvolil SwiftData kedze konkurent Realm konci s podporou a prechadza len na open source
+- pre remote databazu som zvoli FireStore - jednoduchost ulozenia + je mozne robit auto sync medzi zariadeniami aj na Androide
+- pouzil som Crashlytics na zachytenie chyb
+- pouzil som NetworkMonitor na trackovanie stavu siete - nativne, overene riesenie
+- na generovanie textovych klucov pouzivam swiftgen - bohuzial je dostupny len v homebrew, je mozne nastavenie run script phase na automaticke pregenerovanie
+- v Utils si wrappujem objekty, ktore sa zle mockuju
+- domena je oddelena v samostatnom package - zrychluje rebuild/build
+- testy su pisane v Testing frameworku - lepsia parametrizacia testov
+
+Potencialne vylepsenia, ktore by som este navrhoval:
+- logy errorov - momentalne sa nezberaju, ale mohli by byt sucastou Loggeru, umoznilo by to napriklad ukladat logy na zariadenie a pri chybe napr. zatrepanim odoslat logy
+- google analytiky - umoznuje optimalizovat flow usera, zistovat ktorym procesom nechape
+- keychain storage - momentalne mam natvrdo nastavene user-id, lepsi pristup by bol ho vytvorit pri prvom spusteni a ulozit, taktiez by to odomklo moznost menit usera
