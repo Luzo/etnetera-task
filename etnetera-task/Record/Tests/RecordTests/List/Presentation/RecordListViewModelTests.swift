@@ -96,6 +96,31 @@ private struct RecordListViewModelTests {
 
         #expect(spy.spiablePath == [.addRecord])
     }
+
+    @Test
+    @MainActor
+    func sut_should_show_error_on_fail_and_hide_after_some_time() async throws {
+        Container.shared.gatewayRecordListRepository.register {
+            .mock(loadRecords: { _ in return .failure(.repositoryError) } )
+        }
+        let clock = TestClock()
+        Container.shared.clock.register {
+            clock
+        }
+        let sut = RecordListViewModel()
+
+        let refreshTask = Task {
+            await sut.onRefresh()
+        }
+
+        await clock.advance(by: .seconds(0.3))
+
+        await refreshTask.value
+        #expect(sut.errorMessage != nil)
+
+        await clock.advance(by: .seconds(2))
+        #expect(sut.errorMessage == nil)
+    }
 }
 
 private extension RecordListViewModel {
@@ -115,14 +140,14 @@ private extension RecordListViewModelTests {
                 FilterType.all,
                 [
                     FormattedActivityRecord(
-                        id: .with(intValue: 1),
+                        id: UUID.with(intValue: 1).uuidString,
                         name: "1",
                         location: "1l",
                         duration: "0:01",
                         storageType: .local
                     ),
                     FormattedActivityRecord(
-                        id: .with(intValue: 2),
+                        id: UUID.with(intValue: 2).uuidString,
                         name: "2",
                         location: "2l",
                         duration: "0:02",
@@ -134,7 +159,7 @@ private extension RecordListViewModelTests {
                 FilterType.local,
                 [
                     FormattedActivityRecord(
-                        id: .with(intValue: 1),
+                        id: UUID.with(intValue: 1).uuidString,
                         name: "1",
                         location: "1l",
                         duration: "0:01",
@@ -146,7 +171,7 @@ private extension RecordListViewModelTests {
                 FilterType.remote,
                 [
                     FormattedActivityRecord(
-                        id: .with(intValue: 2),
+                        id: UUID.with(intValue: 2).uuidString,
                         name: "2",
                         location: "2l",
                         duration: "0:02",

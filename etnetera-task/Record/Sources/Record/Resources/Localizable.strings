@@ -25,8 +25,15 @@
 "addRecord.duration.seconds.label" = "Seconds";
 "addRecord.saveRecord.button.title" = "Save Record";
 "addRecord.navigation.title" = "Add Record";
+"addRecord.error.server" = "Error ocurred try to save again";
+"addRecord.error.validation" = "Some fields are invalid or left unfilled";
 
 // NOTE: RECORD LIST
 "recordList.filter.picker.title" = "Filter";
 "recordList.navigation.title" = "Activity Records";
 "recordList.toolbar.button.add" = "Add Record";
+"recordList.loading" = "Loading records...";
+"recordList.no.records.found" = "No records found";
+"recordList.error" = "Error ocurred try to reload";
+"recordList.no.network.error" = "It appears that you are disconnected.";
+

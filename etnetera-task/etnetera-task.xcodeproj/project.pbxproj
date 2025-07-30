@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E82059E32E393C54009FC07A /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = E82059E22E393C54009FC07A /* FirebaseCrashlytics */; };
 		E826DEBF2E33A87F00C7987B /* Record in Frameworks */ = {isa = PBXBuildFile; productRef = E826DEBE2E33A87F00C7987B /* Record */; };
 		E89E72DF2E37A8B1005F7B5D /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = E89E72DE2E37A8B1005F7B5D /* FirebaseCore */; };
 		E89E72E12E37A8B1005F7B5D /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = E89E72E02E37A8B1005F7B5D /* FirebaseFirestore */; };
@@ -66,6 +67,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E89E72DF2E37A8B1005F7B5D /* FirebaseCore in Frameworks */,
+				E82059E32E393C54009FC07A /* FirebaseCrashlytics in Frameworks */,
 				E826DEBF2E33A87F00C7987B /* Record in Frameworks */,
 				E89E72E12E37A8B1005F7B5D /* FirebaseFirestore in Frameworks */,
 			);
@@ -123,6 +125,7 @@
 				E826DEBE2E33A87F00C7987B /* Record */,
 				E89E72DE2E37A8B1005F7B5D /* FirebaseCore */,
 				E89E72E02E37A8B1005F7B5D /* FirebaseFirestore */,
+				E82059E22E393C54009FC07A /* FirebaseCrashlytics */,
 			);
 			productName = "etnetera-task";
 			productReference = E8F860352E338CC400AB10DB /* etnetera-task.app */;
@@ -500,6 +503,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E82059E22E393C54009FC07A /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E89E72DD2E37A8B1005F7B5D /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
 		E826DEBE2E33A87F00C7987B /* Record */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Record;
