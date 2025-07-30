@@ -33,6 +33,8 @@ class RecordListViewModel {
     @ObservationIgnored
     @Injected(\.recordCoordinator) private var coordinator
     @ObservationIgnored
+    @Injected(\.networkReachabilityService) private var networkReachabilityService
+    @ObservationIgnored
     @Injected(\.clock) private var clock
 
     @ObservationIgnored
@@ -101,9 +103,13 @@ private extension RecordListViewModel {
     }
 
     private func loadRecords() async {
+        guard await networkReachabilityService.isConnected() else {
+            showDisappearingError(withMessage: LocalizationKeys.RecordList.No.Network.error)
+            return
+        }
+
         isLoading = true
 
-        // TODO: check connection for remote
         let result = await recordsRepository.loadRecords(selectedFilter)
         try? await clock.sleep(for: .seconds(0.3))
 

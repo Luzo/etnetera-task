@@ -23,5 +23,14 @@ public extension Container {
         Factory(self) {
             SystemClock()
         }
+        .onTest {
+            ImmediateClock()
+        }
+        .once()
+    }
+}
+
+struct ImmediateClock: SchedulingClock {
+    func sleep(for duration: Duration) async throws {
     }
 }
