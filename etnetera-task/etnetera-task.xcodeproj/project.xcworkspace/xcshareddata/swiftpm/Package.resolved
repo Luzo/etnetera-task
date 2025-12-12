@@ -1,5 +1,5 @@
 {
-  "originHash" : "cb50c5684e5900aa9f63a01e0524d9d9b0b3128b92f5eb6a1bef82adbb3279c6",
+  "originHash" : "a42be48cfba0e4751998657f71da35a95f53c0afd48664464915772be9c2168f",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -78,8 +78,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/google/grpc-binary.git",
       "state" : {
-        "revision" : "cc0001a0cf963aa40501d9c2b181e7fc9fd8ec71",
-        "version" : "1.69.0"
+        "revision" : "75b31c842f664a0f46a2e590a570e370249fd8f6",
+        "version" : "1.69.1"
       }
     },
     {

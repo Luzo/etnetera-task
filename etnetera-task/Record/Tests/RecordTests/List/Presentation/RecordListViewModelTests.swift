@@ -5,9 +5,10 @@
 //  Created by Lubos Lehota on 25/07/2025.
 //
 
-import Factory
+import FactoryKit
 import FactoryTesting
 import Foundation
+import Record
 import Testing
 
 @testable import Record
@@ -21,6 +22,7 @@ private struct RecordListViewModelTests {
         Container.shared.gatewayRecordListRepository.register {
             .mock(loadRecords: { _ in return .success(expectedRecords) } )
         }
+
         let sut = RecordListViewModel()
 
         #expect(sut.loadedRecords.isEmpty)
@@ -53,7 +55,7 @@ private struct RecordListViewModelTests {
         #expect(sut.loadedRecords == ActivityRecord.mocks)
     }
 
-    @Test(.serialized, arguments: testWipeActiveFilterResultsInputs)
+    @Test(arguments: testWipeActiveFilterResultsInputs)
     @MainActor
     func sut_should_only_wipe_active_filter_results_on_reload(
         input: TestWipeActiveFilterResultsInput
@@ -69,7 +71,7 @@ private struct RecordListViewModelTests {
         #expect(sut.loadedRecords == input.newStoredRecords)
     }
 
-    @Test(.serialized, arguments: testOnFilterChangedInputs)
+    @Test(arguments: testOnFilterChangedInputs)
     @MainActor
     func sut_should_filter_records_on_filter_changed(
         selectedFilter: FilterType,
@@ -107,31 +109,44 @@ private struct RecordListViewModelTests {
         #expect(spy.spiablePath == [.addRecord])
     }
 
-// FIXME: there seems to be some issue with test clock randomly blocking main-thread
-//    @Test
-//    @MainActor
-//    func sut_should_show_error_on_fail_and_hide_after_some_time() async throws {
-//        Container.shared.gatewayRecordListRepository.register {
-//            .mock(loadRecords: { _ in return .failure(.repositoryError) } )
-//        }
-//        let clock = TestClock()
-//        Container.shared.clock.onTest {
-//            clock
-//        }
-//        let sut = RecordListViewModel()
-//
-//        let refreshTask = Task {
-//            await sut.onRefresh()
-//        }
-//
-//        await clock.advance(by: .seconds(0.3))
-//
-//        await refreshTask.value
-//        #expect(sut.errorMessage != nil)
-//
-//        await clock.advance(by: .seconds(2))
-//        #expect(sut.errorMessage == nil)
-//    }
+    @Test
+    @MainActor
+    func sut_should_show_error_on_fail_and_hide_after_some_time() async throws {
+        Container.shared.gatewayRecordListRepository.register {
+            .mock(loadRecords: { _ in return .failure(.repositoryError) } )
+        }
+        let clock = TestClock()
+        Container.shared.clock.onTest {
+            clock
+        }
+        let reachability = StubNetworkReachabilityService()
+        Container.shared.networkReachabilityService.onTest {
+            reachability
+        }
+
+        await reachability._setStatus(isConnected: true)
+        let sut = RecordListViewModel()
+
+        let refreshTask = Task {
+            await Task.yield()
+            await sut.onRefresh()
+            await Task.yield()
+        }
+        let advanceClockTask = Task {
+            await Task.yield()
+            await clock.advance(by: .seconds(0.3))
+            await Task.yield()
+        }
+
+        await refreshTask.value
+        await advanceClockTask.value
+
+        #expect(sut.errorMessage != nil)
+
+        await clock.advance(by: .seconds(2))
+        #expect(sut.errorMessage == nil)
+
+    }
 
     @Test
     @MainActor
@@ -149,37 +164,30 @@ private struct RecordListViewModelTests {
         }
     }
 
-// FIXME: there seems to be some issue with test clock randomly blocking main-thread
-//
-//    @Test
-//    func sut_should_show_reachability_error_on_fail_and_hide_after_some_time() async throws {
-//        let clock = TestClock()
-//
-//        Container.shared.clock.onTest {
-//            clock
-//        }
-//        let reachability = StubNetworkReachabilityService()
-//        Container.shared.networkReachabilityService.onTest {
-//            reachability
-//        }
-//
-//        await reachability._setStatus(isConnected: false)
-//
-//        let sut = await RecordListViewModel()
-//
-//        let refreshTask = await MainActor.run {
-//            Task {
-//                await sut.onRefresh()
-//            }
-//        }
-//
-//        await refreshTask.value
-//        await clock.advance(by: .seconds(0.3))
-//        await #expect(sut.errorMessage == LocalizationKeys.RecordList.No.Network.error)
-//
-//        await clock.advance(by: .seconds(2))
-//        await #expect(sut.errorMessage == nil)
-//    }
+    @Test
+    @MainActor
+    func sut_should_show_reachability_error_on_fail_and_hide_after_some_time() async throws {
+        let clock = TestClock()
+
+        Container.shared.clock.onTest {
+            clock
+        }
+        let reachability = StubNetworkReachabilityService()
+        Container.shared.networkReachabilityService.onTest {
+            reachability
+        }
+
+        await reachability._setStatus(isConnected: false)
+
+        let sut = RecordListViewModel()
+
+        await sut.onRefresh()
+        await clock.advance(by: .seconds(0.3))
+        #expect(sut.errorMessage == LocalizationKeys.RecordList.No.Network.error)
+
+        await clock.advance(by: .seconds(2))
+        #expect(sut.errorMessage == nil)
+    }
 }
 
 private extension RecordListViewModel {

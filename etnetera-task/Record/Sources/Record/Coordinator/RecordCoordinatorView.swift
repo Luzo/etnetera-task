@@ -5,7 +5,7 @@
 //  Created by Lubos Lehota on 25/07/2025.
 //
 
-import Factory
+import FactoryKit
 import SwiftUI
 
 public struct RecordCoordinatorView: View {

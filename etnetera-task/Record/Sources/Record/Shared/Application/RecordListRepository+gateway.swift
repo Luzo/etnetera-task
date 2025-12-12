@@ -5,7 +5,7 @@
 //  Created by Lubos Lehota on 26/07/2025.
 //
 
-import Factory
+import FactoryKit
 
 extension RecordListRepository {
     static func gateway(

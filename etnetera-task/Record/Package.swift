@@ -29,7 +29,7 @@ let package = Package(
         .target(
             name: "Record",
             dependencies: [
-                .product(name: "Factory", package: "Factory"),
+                .product(name: "FactoryKit", package: "Factory"),
                 .product(name: "FirebaseFirestore", package: "firebase-ios-sdk"),
                 .product(name: "Utils", package: "Utils"),
             ],

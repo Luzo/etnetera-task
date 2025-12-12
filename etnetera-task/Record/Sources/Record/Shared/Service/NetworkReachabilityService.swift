@@ -5,7 +5,7 @@
 //  Created by Lubos Lehota on 30/07/2025.
 //
 
-import Factory
+import FactoryKit
 import Network
 
 // NOTE: There is a bug in the system - when wifi reconnects simulator doesn't get a notification

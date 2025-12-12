@@ -5,7 +5,7 @@
 //  Created by Lubos Lehota on 29/07/2025.
 //
 
-import Factory
+import FactoryKit
 
 // TODO: This could be dynamic and stored in Keychain
 actor UserIDService {

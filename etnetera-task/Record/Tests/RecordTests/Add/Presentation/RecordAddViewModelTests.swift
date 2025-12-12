@@ -5,7 +5,7 @@
 //  Created by Lubos Lehota on 28/07/2025.
 //
 
-import Factory
+import FactoryKit
 import FactoryTesting
 import Foundation
 import Testing
@@ -55,39 +55,38 @@ struct RecordAddViewModelTests {
         #expect(spy.spiablePath == [.recordsList])
     }
 
-// FIXME: there seems to be some issue with test clock blocking main-thread
-//
-//    @Test(
-//        .serialized,
-//        arguments: [
-//            (RecordAddViewModel.FormInput.defaultValues, LocalizationKeys.AddRecord.Error.validation),
-//            (RecordAddViewModel.FormInput.validInputForActivityRecordMock, LocalizationKeys.AddRecord.Error.server),
-//        ]
-//    )
-//    func sut_should_show_error_on_fail_and_hide_after_some_time(
-//        formInput: RecordAddViewModel.FormInput,
-//        message: String
-//    ) async throws {
-//        Container.shared.gatewayRecordListRepository.register {
-//            .mock(saveRecord: { _ in return .failure(.repositoryError) } )
-//        }
-//        let clock = TestClock()
-//        Container.shared.clock.onTest {
-//            clock
-//        }
-//        let sut = await RecordAddViewModel()
-//        await sut._set(formInput: formInput)
-//        let refreshTask = Task {
-//            await sut.saveRecord()
-//        }
-//
-//        await refreshTask.value
-//        await clock.advance(by: .seconds(0.1))
-//        await #expect(sut.errorMessage == message)
-//
-//        await clock.advance(by: .seconds(2))
-//        await #expect(sut.errorMessage == nil)
-//    }
+    @Test(
+        arguments: [
+            (RecordAddViewModel.FormInput.defaultValues, LocalizationKeys.AddRecord.Error.validation),
+            (RecordAddViewModel.FormInput.validInputForActivityRecordMock, LocalizationKeys.AddRecord.Error.server),
+        ]
+    )
+    @MainActor
+    func sut_should_show_error_on_fail_and_hide_after_some_time(
+        formInput: RecordAddViewModel.FormInput,
+        message: String
+    ) async throws {
+        Container.shared.gatewayRecordListRepository.register {
+            .mock(saveRecord: { _ in return .failure(.repositoryError) } )
+        }
+        let clock = TestClock()
+        Container.shared.clock.onTest {
+            clock
+        }
+        let sut = RecordAddViewModel()
+        await sut._set(formInput: formInput)
+        let refreshTask = Task {
+            await Task.yield()
+            await sut.saveRecord()
+        }
+
+        await refreshTask.value
+        await clock.advance(by: .seconds(0.1))
+        #expect(sut.errorMessage == message)
+
+        await clock.advance(by: .seconds(2))
+        #expect(sut.errorMessage == nil)
+    }
 
     @Test
     @MainActor

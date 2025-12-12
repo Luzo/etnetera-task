@@ -5,7 +5,7 @@
 //  Created by Lubos Lehota on 27/07/2025.
 //
 
-import Factory
+import FactoryKit
 import FactoryTesting
 import Testing
 

@@ -23,7 +23,7 @@ let package = Package(
         .target(
             name: "Utils",
             dependencies: [
-                .product(name: "Factory", package: "Factory"),
+                .product(name: "FactoryKit", package: "Factory"),
             ],
         ),
 

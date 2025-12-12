@@ -5,7 +5,7 @@
 //  Created by Lubos Lehota on 30/07/2025.
 //
 
-import Factory
+import FactoryKit
 import Foundation
 
 public protocol SchedulingClock: Sendable {
